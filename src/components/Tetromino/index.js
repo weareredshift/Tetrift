@@ -35,37 +35,40 @@ class Tetromino extends Component {
     ];
 
     const tShape = [
-      [[0, 1], [0, 2], [1, 1], [2, 1]],
-      [[1, 0], [1, 1], [1, 2], [2, 2]],
-      [[0, 1], [1, 1], [2, 0], [2, 1]],
-      [[0, 0], [1, 0], [1, 1], [1, 2]]
+      [[0, 1], [1, 0], [1, 1], [1, 2]],
+      [[0, 1], [1, 1], [2, 1], [1, 2]],
+      [[1, 0], [1, 1], [1, 2], [2, 1]],
+      [[0, 1], [1, 1], [2, 1], [1, 0]]
     ];
 
     const zShape = [
-      [[0, 1], [0, 2], [1, 1], [2, 1]],
-      [[1, 0], [1, 1], [1, 2], [2, 2]],
-      [[0, 1], [1, 1], [2, 0], [2, 1]],
-      [[0, 0], [1, 0], [1, 1], [1, 2]]
+      [[0, 1], [1, 1], [1, 0], [2, 0]],
+      [[0, 0], [0, 1], [1, 1], [1, 2]],
+      [[0, 2], [1, 2], [1, 1], [2, 1]],
+      [[1, 0], [1, 1], [2, 1], [2, 2]]
     ];
 
     const sShape = [
-      [[0, 1], [0, 2], [1, 1], [2, 1]],
-      [[1, 0], [1, 1], [1, 2], [2, 2]],
-      [[0, 1], [1, 1], [2, 0], [2, 1]],
-      [[0, 0], [1, 0], [1, 1], [1, 2]]
+      [[0, 0], [1, 0], [1, 1], [2, 1]],
+      [[0, 1], [0, 2], [1, 0], [1, 1]],
+      [[0, 1], [1, 1], [1, 2], [2, 2]],
+      [[1, 1], [1, 2], [2, 0], [2, 1]]
     ];
 
     this.pieces = {
       line,
       square,
       lShape,
-      jShape
+      jShape,
+      tShape,
+      zShape,
+      sShape
     }
 
     this.state = {
       currentPosition: 0,
       rotation: 0,
-      piece: 'line'
+      piece: 'sShape'
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -132,6 +135,24 @@ class Tetromino extends Component {
     );
   }
 
+  renderPieceSelect (pieces) {
+    const options = pieces.map((piece, index) => (
+        <option value={piece} key={index}> {piece} </option>
+      )
+    );
+
+    return (
+      <select onChange={ (event) => {
+        this.setState({
+            piece: event.target.value
+          });
+        }}
+      >
+        { options }
+      </select>
+    );
+  }
+
   handleClick (direction) {
     const rotation = this.rotatePiece(direction, this.state.currentPosition);
     this.setState(rotation);
@@ -139,13 +160,20 @@ class Tetromino extends Component {
 
   render() {
     const piece = this.renderPiece(this.pieces[this.state.piece], this.state.rotation);
+    const pieceSelect = this.renderPieceSelect(Object.keys(this.pieces));
+
     return (
         <div>
-          Tetromino
-
-          { piece }
-          <button onClick={ () => { this.handleClick.call(this, 'right') } }>Rotate Right</button>
-          <button onClick={ () => { this.handleClick.call(this, 'left') } }>Rotate Left</button>
+          <h2>Tetromino</h2>
+          <h3>{ this.state.piece }</h3>
+          <div className="display">
+            <div className="controls">
+              { pieceSelect }
+              <button onClick={ () => { this.handleClick.call(this, 'right') } }>Rotate Right</button>
+              <button onClick={ () => { this.handleClick.call(this, 'left') } }>Rotate Left</button>
+            </div>
+            { piece }
+          </div>
         </div>
       );
   }
