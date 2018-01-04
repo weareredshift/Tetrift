@@ -7,14 +7,14 @@ import './Tetromino.css';
 * @param  {Number} position A number representing the current rotation for a piece
 * @return {Array}          An associative array, of DOM elements renderable by react
 */
-const Tetronimo = ({ shape }) => {
+const Tetronimo = ({ shape, piece }) => {
   const renderedRows = shape.map((row, index) => {
      const rows = row.map((square, i) => {
       const filled = square ? 'filled' : 'empty';
-      return <div className={ `square ${filled}` } key={ i } />
+      return <div className={ `block ${filled}` } key={ i } />
      });
     return (
-      <div className="row" key={ index }>
+      <div className="row" key={ index } className={ piece }>
         { rows }
       </div>
     );

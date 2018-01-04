@@ -13,7 +13,7 @@
   clear: both;
 }
 
-.square {
+.block {
   border: 1px solid grey;
   width: 3rem;
   height: 3rem;

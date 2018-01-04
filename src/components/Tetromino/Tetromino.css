@@ -7,7 +7,7 @@
   margin: 2rem auto;
 }
 
-.square {
+.block {
   width: 3rem;
   height: 3rem;
   float: left;
@@ -15,20 +15,28 @@
 }
 
 
-.square.empty {
+.block.empty {
   background: black;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.square.filled {
+.block.filled {
   background: #eee;
   border-color: rgba(0, 0, 0, 0.1);
 }
 
-.square.border {
+.block.border {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(0, 0, 0, 0.05);
 }
+
+.block.line { background: #6666CC; }
+.block.square { background-color: #CC66CC; }
+.block.lShape { background-color: #D9AA00; }
+.block.jShape { background-color: #66CCCC; }
+.block.tShape { background-color: #CCCC66; }
+.block.zShape { background-color: #CD6666; }
+.block.sShape { background-color: #65CD66; }
 
 
 /* For Dev Testing */

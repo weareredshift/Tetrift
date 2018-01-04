@@ -169,8 +169,10 @@ class Game extends Component {
     const squares = board.map((row, rowIdx) => {
 
       return row.map((square, index) => {
-        const filled = square || pieceCoordinates[[index, rowIdx]] ? 'filled' : 'empty';
-        return <div key={ index } style={ { height, width: height } } className={ `square ${filled}` } />
+        let fillClass = 'empty';
+        if (square) fillClass = 'border';
+        if (pieceCoordinates[[index, rowIdx]]) fillClass = `filled ${ this.state.piece}`
+        return <div key={ index } style={ { height, width: height } } className={ `block ${fillClass}` } />
       })
 
     });
@@ -296,7 +298,7 @@ class Game extends Component {
             <button onClick={ () => { this.handleRotation.call(this, 'left') } }>Rotate Left</button>
           </div>
 
-          <Tetromino shape={ this.currentShape } />
+          <Tetromino piece={ this.state.piece } shape={ this.currentShape } />
         </div>
 
         <div className="main">
