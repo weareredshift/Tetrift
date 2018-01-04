@@ -17,6 +17,7 @@ class Game extends Component {
 
     this.handleStart = this.handleStart.bind(this);
     this.handleStop = this.handleStop.bind(this);
+    this.onPieceUpdate = this.onPieceUpdate.bind(this);
   }
 
   componentDidMount() {
@@ -28,6 +29,17 @@ class Game extends Component {
   componentWillUnmount() {
     this.context.loop.unsubscribe(this.update);
   }
+
+  onPieceUpdate (piece) {
+    console.log(piece);
+  }
+
+  calculatePieceCoordinates (piece, origin = { x: 0, y: 0 }) {
+
+  }
+
+
+
 
   // Tick logic subscribed from Loop component
   update = () => {
@@ -50,6 +62,10 @@ class Game extends Component {
     });
 
     return board;
+  }
+
+  fillGameBoard (board, activePiece, activePiecePosition) {
+
   }
 
   renderGameBoard (board) {
@@ -94,7 +110,10 @@ class Game extends Component {
         <div className="timer">
           { this.state.currentTime }
         </div>
-        <Tetromino shape={ tetrominoShapeNames[0] }/>
+        <Tetromino
+          shape={ tetrominoShapeNames[0] }
+          pieceDidUpdate = { this.onPieceUpdate }
+        />
         { board }
       </div>
     );
