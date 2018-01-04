@@ -1,27 +1,54 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './Game.css';
+import {
+  line,
+  square,
+  lShape,
+  jShape,
+  tShape,
+  zShape,
+  sShape
+} from '../Tetromino/tetrominoShapes';
 
-import { tetrominoShapeNames } from '../Tetromino/tetrominoShapes';
+// import { tetrominoShapeNames } from '../Tetromino/tetrominoShapes';
 import Tetromino from '../Tetromino';
 
 class Game extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      currentTime: 0,
-      piece: null,
-      piecePos: { x: 3, y: -1 }
+    this.pieces = {
+      line,
+      square,
+      lShape,
+      jShape,
+      tShape,
+      zShape,
+      sShape
     };
 
-    this.board = null;
+    this.currentShape = this.generatePiece(this.pieces['line'][0]);
+    this.boardDimensions = { x: 10, y: 20 };
+    this.board = this.generateGameBoard(this.boardDimensions);
 
+
+    this.state = {
+      currentTime: 0,
+      piece: 'line',
+      piecePos: {x: 0, y: 3},
+      currentPosition: 0,
+      rotation: 0
+    };
+
+    // Bind functions
     this.handleStart = this.handleStart.bind(this);
     this.handleStop = this.handleStop.bind(this);
-    this.onPieceUpdate = this.onPieceUpdate.bind(this);
+    // this.onPieceUpdate = this.onPieceUpdate.bind(this);
 
     this.boardDimensions = { x: 10, y: 20 };
+    this.handleRotation = this.handleRotation.bind(this);
+    this.updatePieceState = this.updatePieceState.bind(this);
   }
 
   componentDidMount() {
@@ -34,21 +61,19 @@ class Game extends Component {
     this.context.loop.unsubscribe(this.update);
   }
 
-  onPieceUpdate (piece) {
-    // console.log(piece);
-    this.setState({ piece: piece });
+  /*****************************
+  * Game Loop Functions
+  *****************************/
+
+  handleStart () {
+    console.log(this.context.loop.loopID)
+
+    this.context.loop.start()
   }
 
-  calculatePieceCoordinates (piece, origin = {x: -1, y: -3}) {
-    let coordinates = {};
-    // console.log(piece, origin);
-    piece.forEach((row, rowIdx) => {
-      row.forEach((col, colIdx) => {
-        if (col) coordinates[[colIdx + origin.x, rowIdx + origin.y]] = 1;
-      })
-    });
-
-    return coordinates;
+  handleStop () {
+    console.log(this.context.loop.loopID)
+    window.cancelAnimationFrame(this.context.loop.loopID)
   }
 
   // Tick logic subscribed from Loop component
@@ -90,8 +115,27 @@ class Game extends Component {
     }
   }
 
-  generateGameBoard () {
-    const { x, y } = this.boardDimensions;
+  calculatePieceCoordinates (piece, origin = {x: -1, y: -3}) {
+    let coordinates = {};
+    piece.forEach((row, rowIdx) => {
+      row.forEach((col, colIdx) => {
+        if (col) coordinates[[rowIdx + origin.x, colIdx + origin.y]] = 1;
+      })
+    });
+
+    return coordinates;
+  }
+
+  /*****************************
+  * Game Board Setup
+  *****************************/
+
+  /**
+   * Creates an empty game board
+   * @return {Array} Returns associative array as the game board
+   */
+  generateGameBoard (dimensions) {
+    const { x, y } = dimensions;
 
     const wrapper = new Array(y + 1).fill([]);
     const board = wrapper.map((val, index) => {
@@ -108,10 +152,14 @@ class Game extends Component {
     return board;
   }
 
-  fillGameBoard (board, activePiece, activePiecePosition) {
 
-  }
-
+  /**
+   * Generates a renderable board
+   * @param  {Array} board    Associative array representing the game board
+   * @param  {Array} piece    Associative array representing the piece
+   * @param  {object} piecePos x and y coordiates for piece origin [0, 0]
+   * @return {object}          JSX representation of the board
+   */
   renderGameBoard (board, piece, piecePos) {
     const pieceCoordinates = piece ? this.calculatePieceCoordinates(piece, piecePos) : {};
     const { x, y } = this.boardDimensions;
@@ -135,23 +183,103 @@ class Game extends Component {
 
   }
 
-  handleStart () {
-    console.log(this.context.loop.loopID)
+  /*****************************
+  * Tetronimo Setup
+  *****************************/
+  /**
+   * Creates a tetromino piece data structure
+   * @param  {Array} activeSquares An array of four tuples that define the filled squares
+   * @return {Array}               A tetromino data structure (associative array)
+   */
+  generatePiece (activeSquares) {
+    const pieceGrid =  [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+      ];
 
-    this.context.loop.start()
+    activeSquares.forEach((coord, index) => {
+      const row = coord[0];
+      const column = coord[1];
+
+      pieceGrid[row][column] = 1;
+    });
+
+    return pieceGrid;
   }
 
-  handleStop () {
-    console.log(this.context.loop.loopID)
-    window.cancelAnimationFrame(this.context.loop.loopID)
+  /**
+   * Rotates a piece to the next position, either left or right
+   * @param  {String} direction       A rotation direction, either 'right' or 'left'
+   * @param  {Number} currentPosition The current rotation index
+   * @return {Object}                 Returns an object with the relative rotation and the cumulative position, both for udating state
+   */
+  rotatePiece (direction, currentPosition) {
+    const nextPosition = direction === 'right' ? currentPosition + 1 : currentPosition - 1 ;
+    return {
+      currentPosition: nextPosition,
+      rotation: Math.abs(nextPosition) % 4
+    }
+  }
+
+  /**
+   * Updates the component state dyanimcally based on arbitrary state properties
+   * @param  {Object} newState Object mapping to updated properties in state
+   */
+  updatePieceState (newState = {}, callback = () => {}) {
+    const updatedState = Object.assign({}, this.state, newState);
+    const { piece, rotation } = updatedState;
+
+    const thisPiece = this.pieces[piece];
+    this.currentShape = this.generatePiece(thisPiece[rotation]);
+
+    this.setState(updatedState, callback);
+  }
+
+  /**
+   * Rotate the active piece left or right
+   * @param  {String} direction Direction of 'left' or 'right'
+   */
+  handleRotation (direction) {
+    const pieceConfig = this.rotatePiece(direction, this.state.currentPosition);
+    this.updatePieceState(pieceConfig);
+  }
+
+
+  /*****************************
+  * On Screen Controls
+  *****************************/
+
+  /**
+   * Renders a select box for swapping pieces
+   * @param  {Array} pieces An array of piece names
+   * @return {Object}        JSX to render in the components render method
+   */
+  renderPieceSelect (pieces) {
+    const options = pieces.map((piece, index) => (
+        <option value={piece} key={index}> {piece} </option>
+      )
+    );
+
+    return (
+      <select onChange={ (event) => {
+        this.updatePieceState({rotation: 0, piece: event.target.value});
+      }}
+      >
+        { options }
+      </select>
+    );
   }
 
   render() {
     let board = null;
 
     if (this.board) {
-      board = this.renderGameBoard(this.board, this.state.piece, this.state.piecePos);
+      board = this.renderGameBoard(this.board, this.currentShape, this.state.piecePos);
     }
+
+    const pieceSelect = this.renderPieceSelect(Object.keys(this.pieces));
 
     return (
       <div className="game cf">
@@ -161,10 +289,14 @@ class Game extends Component {
           <div className="timer">
             { this.state.currentTime }
           </div>
-          <Tetromino
-            shape={ tetrominoShapeNames[0] }
-            pieceDidUpdate = { this.onPieceUpdate }
-          />
+
+          <div className="controls">
+            { pieceSelect }
+            <button onClick={ () => { this.handleRotation.call(this, 'right') } }>Rotate Right</button>
+            <button onClick={ () => { this.handleRotation.call(this, 'left') } }>Rotate Left</button>
+          </div>
+
+          <Tetromino shape={ this.currentShape } />
         </div>
 
         <div className="main">
