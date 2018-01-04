@@ -73,13 +73,13 @@ class Game extends Component {
 
   renderGameBoard (board) {
     const { x, y } = this.boardDimensions;
-    const height = window.innerHeight / (y + 1);
+    const height = window.innerHeight / (y + 3);
     const width = height * (x + 2)
 
     const squares = board.map((row) => {
       
       return row.map((square, index) => {
-        const filled = square ? 'filled' : 'empty';
+        const filled = square ? 'border' : 'empty';
         return <div key={ index } style={ { height, width: height } } className={ `square ${filled}` } />
       })
 
