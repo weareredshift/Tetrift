@@ -36,7 +36,7 @@ class Game extends Component {
     this.state = {
       currentTime: 0,
       piece: 'line',
-      piecePos: {x: 0, y: 3},
+      piecePos: { x: 3, y: 0 },
       currentPosition: 0,
       rotation: 0
     };
