@@ -96,11 +96,7 @@ class Game extends Component {
     const squares = board.map((row, rowIdx) => {
 
       return row.map((square, index) => {
-<<<<<<< HEAD
         const filled = square || pieceCoordinates[[rowIdx, index]] ? 'filled' : 'empty';
-=======
-        const filled = square ? 'border' : 'empty';
->>>>>>> d43d90b28b1e38433a13cb2e9b443c88c48be837
         return <div key={ index } style={ { height, width: height } } className={ `square ${filled}` } />
       })
 
