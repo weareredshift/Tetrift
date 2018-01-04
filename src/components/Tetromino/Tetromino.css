@@ -22,7 +22,8 @@
 
 .block.filled {
   background: #eee;
-  border-color: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 2px 1px 0px rgba(255,255,255,0.2), inset 0 -2px 1px 0 rgba(0,0,0,0.15)
 }
 
 .block.border {
@@ -30,13 +31,13 @@
   border-color: rgba(0, 0, 0, 0.05);
 }
 
-.block.line { background: #6666CC; }
-.block.square { background-color: #CC66CC; }
-.block.lShape { background-color: #D9AA00; }
-.block.jShape { background-color: #66CCCC; }
-.block.tShape { background-color: #CCCC66; }
-.block.zShape { background-color: #CD6666; }
-.block.sShape { background-color: #65CD66; }
+.block.line { background-color: #274596; }
+.block.square { background-color: #2BAF98; }
+.block.lShape { background-color: #F8D517; }
+.block.jShape { background-color: #EF7E18; }
+.block.tShape { background-color: #E02386; }
+.block.zShape { background-color: #E4292E; }
+.block.sShape { background-color: #5BAD2B; }
 
 
 /* For Dev Testing */
