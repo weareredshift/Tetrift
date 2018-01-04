@@ -26,23 +26,25 @@ class TetrominoState extends Component {
       sShape
     }
 
+    this.currentShape = this.generatePeice(this.pieces[this.props.shape][0]);
+
     this.state = {
       currentPosition: 0,
       rotation: 0,
-      piece: this.props.shape,
-      currentShape: this.generatePeice(this.pieces[this.props.shape][0])
+      piece: this.props.shape
     };
 
     this.pieceDidUpdate = this.pieceDidUpdate.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.updatePieceState = this.updatePieceState.bind(this);
   }
 
   componentDidMount() {
-    this.props.pieceDidUpdate(this.state.piece);
+    this.props.pieceDidUpdate(this.currentShape);
   }
 
   pieceDidUpdate () {
-    this.props.pieceDidUpdate(this.state.currentShape);
+    this.props.pieceDidUpdate(this.currentShape);
   }
 
   /**
@@ -82,16 +84,15 @@ class TetrominoState extends Component {
     }
   }
 
-  setPiece (rotation, piece) {
+  updatePieceState (newState = {}) {
+    const updatedState = Object.assign({}, this.state, newState);
+    const { piece, rotation } = updatedState;
+
     const thisPiece = this.pieces[piece];
-    const shape = this.generatePeice(thisPiece[rotation.rotation]);
+    this.currentShape = this.generatePeice(thisPiece[rotation]);
 
-    this.setState({
-      ...rotation,
-      currentShape: shape
-    }, this.pieceDidUpdate)
+    this.setState(updatedState, this.pieceDidUpdate);
   }
-
 
   renderPieceSelect (pieces) {
     const options = pieces.map((piece, index) => (
@@ -101,7 +102,7 @@ class TetrominoState extends Component {
 
     return (
       <select onChange={ (event) => {
-        this.setPiece({rotation: 0}, event.target.value)
+        this.updatePieceState({rotation: 0, piece: event.target.value});
       }}
       >
         { options }
@@ -110,12 +111,12 @@ class TetrominoState extends Component {
   }
 
   handleClick (direction) {
-    const rotation = this.rotatePiece(direction, this.state.currentPosition);
-    this.setPiece(rotation, this.state.piece);
+    const pieceConfig = this.rotatePiece(direction, this.state.currentPosition);
+    this.updatePieceState(pieceConfig);
   }
 
   render() {
-    const shape = this.state.currentShape;
+    const shape = this.currentShape;
     const pieceSelect = this.renderPieceSelect(Object.keys(this.pieces));
     return (
       <div className="tetromino">
@@ -127,9 +128,7 @@ class TetrominoState extends Component {
             <button onClick={ () => { this.handleClick.call(this, 'right') } }>Rotate Right</button>
             <button onClick={ () => { this.handleClick.call(this, 'left') } }>Rotate Left</button>
           </div>
-          { shape ?
-            <Tetromino shape={ shape } />
-            : null}
+          <Tetromino shape={ shape } />
         </div>
       </div>
     );
