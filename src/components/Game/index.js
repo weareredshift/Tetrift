@@ -12,7 +12,7 @@ class Game extends Component {
     this.state = {
       currentTime: 0,
       piece: null,
-      piecePos: {x: 0, y: 3}
+      piecePos: { x: 3, y: -1 }
     };
 
     this.board = null;
@@ -21,13 +21,13 @@ class Game extends Component {
     this.handleStop = this.handleStop.bind(this);
     this.onPieceUpdate = this.onPieceUpdate.bind(this);
 
-    this.boardDimensions = { x: 10, y: 20 }
+    this.boardDimensions = { x: 10, y: 20 };
   }
 
   componentDidMount() {
     this.context.loop.subscribe(this.update);
     this.board = this.generateGameBoard(this.boardDimensions);
-
+    document.addEventListener("keydown", this.handleKeyDown.bind(this));
   }
 
   componentWillUnmount() {
@@ -44,7 +44,7 @@ class Game extends Component {
     // console.log(piece, origin);
     piece.forEach((row, rowIdx) => {
       row.forEach((col, colIdx) => {
-        if (col) coordinates[[rowIdx + origin.x, colIdx + origin.y]] = 1;
+        if (col) coordinates[[colIdx + origin.x, rowIdx + origin.y]] = 1;
       })
     });
 
@@ -53,16 +53,41 @@ class Game extends Component {
 
   // Tick logic subscribed from Loop component
   update = () => {
-    if (this.state.currentTime % 30 === 0) this.pieceMoveDown();
+    if (this.state.currentTime % 30 === 0) this.pieceFall();
     this.setState({
       currentTime: this.state.currentTime + 1
     });
   };
 
-  pieceMoveDown() {
+  pieceFall() {
+    this.setState({
+      piecePos: { x: this.state.piecePos.x, y: this.state.piecePos.y + 1 }
+    });
+  }
+
+  moveLeft() {
+    this.setState({
+      piecePos: { x: this.state.piecePos.x - 1, y: this.state.piecePos.y }
+    });
+  }
+
+  moveRight() {
     this.setState({
       piecePos: { x: this.state.piecePos.x + 1, y: this.state.piecePos.y }
-    })
+    });
+  }
+
+  handleKeyDown(event) {
+    switch(event.keyCode) {
+      case 37:
+        this.moveLeft();
+        break;
+      case 39:
+        this.moveRight();
+        break;
+      default:
+        break;
+    }
   }
 
   generateGameBoard () {
@@ -96,7 +121,7 @@ class Game extends Component {
     const squares = board.map((row, rowIdx) => {
 
       return row.map((square, index) => {
-        const filled = square || pieceCoordinates[[rowIdx, index]] ? 'filled' : 'empty';
+        const filled = square || pieceCoordinates[[index, rowIdx]] ? 'filled' : 'empty';
         return <div key={ index } style={ { height, width: height } } className={ `square ${filled}` } />
       })
 
