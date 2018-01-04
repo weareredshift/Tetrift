@@ -3,10 +3,12 @@
   max-width: 90vw;
   height: 100vh;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 
 .board {
-  width: 36rem;
   margin: 0 auto;
   clear: both;
 }
@@ -25,5 +27,5 @@
 }
 
 .sidebar {
-  position: absolute;
+  width: 25%;
 }

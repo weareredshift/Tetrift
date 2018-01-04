@@ -1,5 +1,8 @@
-.App {
+.app {
   text-align: center;
+  background-image: url('./assets/meadow.png');
+  background-size: cover;
+  background-position: center;
 }
 
 .App-logo {

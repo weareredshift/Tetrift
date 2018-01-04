@@ -90,13 +90,17 @@ class Game extends Component {
   renderGameBoard (board, piece, piecePos) {
     const pieceCoordinates = piece ? this.calculatePieceCoordinates(piece, piecePos) : {};
     const { x, y } = this.boardDimensions;
-    const height = window.innerHeight / (y + 1);
+    const height = window.innerHeight / (y + 3);
     const width = height * (x + 2)
 
     const squares = board.map((row, rowIdx) => {
 
       return row.map((square, index) => {
+<<<<<<< HEAD
         const filled = square || pieceCoordinates[[rowIdx, index]] ? 'filled' : 'empty';
+=======
+        const filled = square ? 'border' : 'empty';
+>>>>>>> d43d90b28b1e38433a13cb2e9b443c88c48be837
         return <div key={ index } style={ { height, width: height } } className={ `square ${filled}` } />
       })
 
