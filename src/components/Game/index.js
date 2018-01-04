@@ -87,13 +87,13 @@ class Game extends Component {
 
   }
 
-  renderGameBoard (board) {
+  renderGameBoard (board, piece, piecePos) {
     const pieceCoordinates = piece ? this.calculatePieceCoordinates(piece, piecePos) : {};
     const { x, y } = this.boardDimensions;
     const height = window.innerHeight / (y + 1);
     const width = height * (x + 2)
 
-    const squares = board.map((row) => {
+    const squares = board.map((row, rowIdx) => {
 
       return row.map((square, index) => {
         const filled = square || pieceCoordinates[[rowIdx, index]] ? 'filled' : 'empty';
