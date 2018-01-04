@@ -10,7 +10,9 @@ class Game extends Component {
     super(props);
 
     this.state = {
-      currentTime: 0
+      currentTime: 0,
+      piece: null,
+      piecePos: {x: 0, y: 3}
     };
 
     this.board = null;
@@ -33,25 +35,39 @@ class Game extends Component {
   }
 
   onPieceUpdate (piece) {
-    console.log(piece);
+    // console.log(piece);
+    this.setState({ piece: piece });
   }
 
-  calculatePieceCoordinates (piece, origin = { x: 0, y: 0 }) {
+  calculatePieceCoordinates (piece, origin = {x: -1, y: -3}) {
+    let coordinates = {};
+    // console.log(piece, origin);
+    piece.forEach((row, rowIdx) => {
+      row.forEach((col, colIdx) => {
+        if (col) coordinates[[rowIdx + origin.x, colIdx + origin.y]] = 1;
+      })
+    });
 
+    return coordinates;
   }
-
-
-
 
   // Tick logic subscribed from Loop component
   update = () => {
+    if (this.state.currentTime % 30 === 0) this.pieceMoveDown();
     this.setState({
       currentTime: this.state.currentTime + 1
     });
   };
 
+  pieceMoveDown() {
+    this.setState({
+      piecePos: { x: this.state.piecePos.x + 1, y: this.state.piecePos.y }
+    })
+  }
+
   generateGameBoard () {
     const { x, y } = this.boardDimensions;
+
     const wrapper = new Array(y + 1).fill([]);
     const board = wrapper.map((val, index) => {
       const row = new Array(x + 2).fill(0);
@@ -71,15 +87,16 @@ class Game extends Component {
 
   }
 
-  renderGameBoard (board) {
+  renderGameBoard (board, piece, piecePos) {
+    const pieceCoordinates = piece ? this.calculatePieceCoordinates(piece, piecePos) : {};
     const { x, y } = this.boardDimensions;
     const height = window.innerHeight / (y + 3);
     const width = height * (x + 2)
 
-    const squares = board.map((row) => {
-      
+    const squares = board.map((row, rowIdx) => {
+
       return row.map((square, index) => {
-        const filled = square ? 'border' : 'empty';
+        const filled = square || pieceCoordinates[[rowIdx, index]] ? 'filled' : 'empty';
         return <div key={ index } style={ { height, width: height } } className={ `square ${filled}` } />
       })
 
@@ -108,7 +125,7 @@ class Game extends Component {
     let board = null;
 
     if (this.board) {
-      board = this.renderGameBoard(this.board);
+      board = this.renderGameBoard(this.board, this.state.piece, this.state.piecePos);
     }
 
     return (
@@ -124,7 +141,7 @@ class Game extends Component {
             pieceDidUpdate = { this.onPieceUpdate }
           />
         </div>
-        
+
         <div className="main">
           { board }
         </div>
