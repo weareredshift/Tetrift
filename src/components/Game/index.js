@@ -36,7 +36,7 @@ class Game extends Component {
     });
   };
 
-  generateGameBoard (x=10, y=22) {
+  generateGameBoard (x=10, y=20) {
     const wrapper = new Array(y + 1).fill([]);
     const board = wrapper.map((val, index) => {
       const row = new Array(x + 2).fill(0);
