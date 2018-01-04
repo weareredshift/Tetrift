@@ -29,10 +29,20 @@ class TetrominoState extends Component {
     this.state = {
       currentPosition: 0,
       rotation: 0,
-      piece: this.props.shape
+      piece: this.props.shape,
+      currentShape: this.generatePeice(this.pieces[this.props.shape][0])
     };
 
+    this.pieceDidUpdate = this.pieceDidUpdate.bind(this);
     this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.pieceDidUpdate(this.state.piece);
+  }
+
+  pieceDidUpdate () {
+    this.props.pieceDidUpdate(this.state.currentShape);
   }
 
   /**
@@ -72,6 +82,17 @@ class TetrominoState extends Component {
     }
   }
 
+  setPiece (rotation, piece) {
+    const thisPiece = this.pieces[piece];
+    const shape = this.generatePeice(thisPiece[rotation.rotation]);
+
+    this.setState({
+      ...rotation,
+      currentShape: shape
+    }, this.pieceDidUpdate)
+  }
+
+
   renderPieceSelect (pieces) {
     const options = pieces.map((piece, index) => (
         <option value={piece} key={index}> {piece} </option>
@@ -80,10 +101,8 @@ class TetrominoState extends Component {
 
     return (
       <select onChange={ (event) => {
-        this.setState({
-            piece: event.target.value
-          });
-        }}
+        this.setPiece({rotation: 0}, event.target.value)
+      }}
       >
         { options }
       </select>
@@ -92,16 +111,12 @@ class TetrominoState extends Component {
 
   handleClick (direction) {
     const rotation = this.rotatePiece(direction, this.state.currentPosition);
-    this.setState(rotation);
+    this.setPiece(rotation, this.state.piece);
   }
 
   render() {
-    const piece = this.pieces[this.state.piece];
-    const rotation = this.state.rotation;
-    const shape = this.generatePeice(piece[rotation]);
-
+    const shape = this.state.currentShape;
     const pieceSelect = this.renderPieceSelect(Object.keys(this.pieces));
-
     return (
       <div className="tetromino">
         <h2>Tetromino</h2>
@@ -112,7 +127,9 @@ class TetrominoState extends Component {
             <button onClick={ () => { this.handleClick.call(this, 'right') } }>Rotate Right</button>
             <button onClick={ () => { this.handleClick.call(this, 'left') } }>Rotate Left</button>
           </div>
-          <Tetromino shape={ shape } />
+          { shape ?
+            <Tetromino shape={ shape } />
+            : null}
         </div>
       </div>
     );
