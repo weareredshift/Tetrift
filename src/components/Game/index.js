@@ -18,11 +18,13 @@ class Game extends Component {
     this.handleStart = this.handleStart.bind(this);
     this.handleStop = this.handleStop.bind(this);
     this.onPieceUpdate = this.onPieceUpdate.bind(this);
+
+    this.boardDimensions = { x: 10, y: 20 }
   }
 
   componentDidMount() {
     this.context.loop.subscribe(this.update);
-    this.board = this.generateGameBoard();
+    this.board = this.generateGameBoard(this.boardDimensions);
 
   }
 
@@ -48,7 +50,8 @@ class Game extends Component {
     });
   };
 
-  generateGameBoard (x=10, y=20) {
+  generateGameBoard () {
+    const { x, y } = this.boardDimensions;
     const wrapper = new Array(y + 1).fill([]);
     const board = wrapper.map((val, index) => {
       const row = new Array(x + 2).fill(0);
@@ -69,16 +72,21 @@ class Game extends Component {
   }
 
   renderGameBoard (board) {
+    const { x, y } = this.boardDimensions;
+    const height = window.innerHeight / (y + 1);
+    const width = height * (x + 2)
+
     const squares = board.map((row) => {
+      
       return row.map((square, index) => {
         const filled = square ? 'filled' : 'empty';
-        return <div key={ index } className={ `square ${filled}` } />
+        return <div key={ index } style={ { height, width: height } } className={ `square ${filled}` } />
       })
 
     });
 
     return (
-      <div className="board">
+      <div style={ { width } } className="board cf">
         { squares }
       </div>
     );
@@ -104,17 +112,22 @@ class Game extends Component {
     }
 
     return (
-      <div className="game">
-        <button onClick={ this.handleStart }>Start</button>
-        <button onClick={ this.handleStop }>Stop</button>
-        <div className="timer">
-          { this.state.currentTime }
+      <div className="game cf">
+        <div className="sidebar">
+          <button onClick={ this.handleStart }>Start</button>
+          <button onClick={ this.handleStop }>Stop</button>
+          <div className="timer">
+            { this.state.currentTime }
+          </div>
+          <Tetromino
+            shape={ tetrominoShapeNames[0] }
+            pieceDidUpdate = { this.onPieceUpdate }
+          />
         </div>
-        <Tetromino
-          shape={ tetrominoShapeNames[0] }
-          pieceDidUpdate = { this.onPieceUpdate }
-        />
-        { board }
+        
+        <div className="main">
+          { board }
+        </div>
       </div>
     );
   }
