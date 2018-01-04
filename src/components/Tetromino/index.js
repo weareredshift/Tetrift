@@ -40,9 +40,13 @@ class TetrominoState extends Component {
   }
 
   componentDidMount() {
-    this.props.pieceDidUpdate(this.currentShape);
+    this.pieceDidUpdate();
   }
 
+  /**
+   * Fires a callback provided as a prop when the piece is changed or rotated
+   * @return {[type]} [description]
+   */
   pieceDidUpdate () {
     this.props.pieceDidUpdate(this.currentShape);
   }
@@ -84,6 +88,11 @@ class TetrominoState extends Component {
     }
   }
 
+
+  /**
+   * Updates the component state dyanimcally based on arbitrary state properties
+   * @param  {Object} newState Object mapping to updated properties in state
+   */
   updatePieceState (newState = {}) {
     const updatedState = Object.assign({}, this.state, newState);
     const { piece, rotation } = updatedState;
@@ -94,6 +103,11 @@ class TetrominoState extends Component {
     this.setState(updatedState, this.pieceDidUpdate);
   }
 
+  /**
+   * Renders a select box for swapping pieces
+   * @param  {Array} pieces An array of piece names
+   * @return {Object}        JSX to render in the components render method
+   */
   renderPieceSelect (pieces) {
     const options = pieces.map((piece, index) => (
         <option value={piece} key={index}> {piece} </option>
