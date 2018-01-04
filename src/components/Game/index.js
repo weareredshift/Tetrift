@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './Game.css';
+import {
+  line,
+  square,
+  lShape,
+  jShape,
+  tShape,
+  zShape,
+  sShape
+} from '../Tetromino/tetrominoShapes';
 
 import { tetrominoShapeNames } from '../Tetromino/tetrominoShapes';
 import Tetromino from '../Tetromino';
@@ -9,10 +18,25 @@ class Game extends Component {
   constructor(props) {
     super(props);
 
+    this.pieces = {
+      line,
+      square,
+      lShape,
+      jShape,
+      tShape,
+      zShape,
+      sShape
+    };
+
+    this.currentShape = this.generatePiece(this.pieces['line'][0]);
+    this.boardDimensions = { x: 10, y: 20 };
+
     this.state = {
       currentTime: 0,
-      piece: null,
-      piecePos: {x: 0, y: 3}
+      piece: 'line',
+      piecePos: {x: 0, y: 3},
+      currentPosition: 0,
+      rotation: 0
     };
 
     this.board = null;
@@ -20,28 +44,77 @@ class Game extends Component {
     this.handleStart = this.handleStart.bind(this);
     this.handleStop = this.handleStop.bind(this);
     this.onPieceUpdate = this.onPieceUpdate.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.updatePieceState = this.updatePieceState.bind(this);
 
-    this.boardDimensions = { x: 10, y: 20 }
   }
 
   componentDidMount() {
     this.context.loop.subscribe(this.update);
     this.board = this.generateGameBoard(this.boardDimensions);
-
   }
 
   componentWillUnmount() {
     this.context.loop.unsubscribe(this.update);
   }
 
+  /**
+   * Creates a tetromino piece data structure
+   * @param  {Array} activeSquares An array of four tuples that define the filled squares
+   * @return {Array}               A tetromino data structure (associative array)
+   */
+  generatePiece (activeSquares) {
+    const pieceGrid =  [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+      ];
+
+    activeSquares.forEach((coord, index) => {
+      const row = coord[0];
+      const column = coord[1];
+
+      pieceGrid[row][column] = 1;
+    });
+
+    return pieceGrid;
+  }
+
+  /**
+   * Rotates a piece to the next position, either left or right
+   * @param  {String} direction       A rotation direction, either 'right' or 'left'
+   * @param  {Number} currentPosition The current rotation index
+   * @return {Object}                 Returns an object with the relative rotation and the cumulative position, both for udating state
+   */
+  rotatePiece (direction, currentPosition) {
+    const nextPosition = direction === 'right' ? currentPosition + 1 : currentPosition - 1 ;
+    return {
+      currentPosition: nextPosition,
+      rotation: Math.abs(nextPosition) % 4
+    }
+  }
+
+  /**
+   * Updates the component state dyanimcally based on arbitrary state properties
+   * @param  {Object} newState Object mapping to updated properties in state
+   */
+  updatePieceState (newState = {}, callback = () => {}) {
+    const updatedState = Object.assign({}, this.state, newState);
+    const { piece, rotation } = updatedState;
+
+    const thisPiece = this.pieces[piece];
+    this.currentShape = this.generatePiece(thisPiece[rotation]);
+
+    this.setState(updatedState, callback);
+  }
+
   onPieceUpdate (piece) {
-    // console.log(piece);
-    this.setState({ piece: piece });
+    // this.setState({ piece: piece });
   }
 
   calculatePieceCoordinates (piece, origin = {x: -1, y: -3}) {
     let coordinates = {};
-    // console.log(piece, origin);
     piece.forEach((row, rowIdx) => {
       row.forEach((col, colIdx) => {
         if (col) coordinates[[rowIdx + origin.x, colIdx + origin.y]] = 1;
@@ -83,10 +156,6 @@ class Game extends Component {
     return board;
   }
 
-  fillGameBoard (board, activePiece, activePiecePosition) {
-
-  }
-
   renderGameBoard (board, piece, piecePos) {
     const pieceCoordinates = piece ? this.calculatePieceCoordinates(piece, piecePos) : {};
     const { x, y } = this.boardDimensions;
@@ -121,12 +190,40 @@ class Game extends Component {
     window.cancelAnimationFrame(this.context.loop.loopID)
   }
 
+  /**
+   * Renders a select box for swapping pieces
+   * @param  {Array} pieces An array of piece names
+   * @return {Object}        JSX to render in the components render method
+   */
+  renderPieceSelect (pieces) {
+    const options = pieces.map((piece, index) => (
+        <option value={piece} key={index}> {piece} </option>
+      )
+    );
+
+    return (
+      <select onChange={ (event) => {
+        this.updatePieceState({rotation: 0, piece: event.target.value});
+      }}
+      >
+        { options }
+      </select>
+    );
+  }
+
+  handleClick (direction) {
+    const pieceConfig = this.rotatePiece(direction, this.state.currentPosition);
+    this.updatePieceState(pieceConfig);
+  }
+
   render() {
     let board = null;
 
     if (this.board) {
-      board = this.renderGameBoard(this.board, this.state.piece, this.state.piecePos);
+      board = this.renderGameBoard(this.board, this.currentShape, this.state.piecePos);
     }
+
+    const pieceSelect = this.renderPieceSelect(Object.keys(this.pieces));
 
     return (
       <div className="game cf">
@@ -136,6 +233,13 @@ class Game extends Component {
           <div className="timer">
             { this.state.currentTime }
           </div>
+
+          <div className="controls">
+            { pieceSelect }
+            <button onClick={ () => { this.handleClick.call(this, 'right') } }>Rotate Right</button>
+            <button onClick={ () => { this.handleClick.call(this, 'left') } }>Rotate Left</button>
+          </div>
+
           <Tetromino
             shape={ tetrominoShapeNames[0] }
             pieceDidUpdate = { this.onPieceUpdate }
