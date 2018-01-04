@@ -103,7 +103,7 @@ class TetrominoState extends Component {
     const pieceSelect = this.renderPieceSelect(Object.keys(this.pieces));
 
     return (
-      <div>
+      <div className="tetromino">
         <h2>Tetromino</h2>
         <h3>{ this.state.piece }</h3>
         <div className="display">

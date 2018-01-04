@@ -1,3 +1,7 @@
+.tetromino {
+  text-align: center;
+}
+
 .piece {
   width: 12rem;
   margin: 2rem auto;
