@@ -31,10 +31,10 @@
   border-color: rgba(0, 0, 0, 0.05);
 }
 
-.block.line { background-color: #274596; }
-.block.square { background-color: #2BAF98; }
+.block.line { background-color: #446FE3; }
+.block.square { background-color: #EF7E18; }
 .block.lShape { background-color: #F8D517; }
-.block.jShape { background-color: #EF7E18; }
+.block.jShape { background-color: #2BAF98; }
 .block.tShape { background-color: #E02386; }
 .block.zShape { background-color: #E4292E; }
 .block.sShape { background-color: #5BAD2B; }
