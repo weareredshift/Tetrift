@@ -34,6 +34,12 @@ class Game extends Component {
     console.log(piece);
   }
 
+  calculatePieceCoordinates (piece, origin = { x: 0, y: 0 }) {
+
+  }
+
+
+
 
   // Tick logic subscribed from Loop component
   update = () => {
