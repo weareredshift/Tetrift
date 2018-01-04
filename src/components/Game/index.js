@@ -298,7 +298,7 @@ class Game extends Component {
             <button onClick={ () => { this.handleRotation.call(this, 'left') } }>Rotate Left</button>
           </div>
 
-          <Tetromino piece={ this.state.piece } shape={ this.currentShape } />
+          <Tetromino fillClass={ this.state.piece } shape={ this.currentShape } />
         </div>
 
         <div className="main">
