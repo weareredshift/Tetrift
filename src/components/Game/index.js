@@ -206,9 +206,9 @@ class Game extends Component {
       return row.map((square, index) => {
         let fillClass = 'empty';
         if (square) {
-          fillClass = pieceColors[square];
+          fillClass = `filled ${pieceColors[square]}`;
         };
-        if (pieceCoordinates[[index, rowIdx]]) fillClass = this.state.piece;
+        if (pieceCoordinates[[index, rowIdx]]) fillClass = `filled ${this.state.piece}`;
         return <div key={ index } style={ { height, width: height } } className={ `block ${fillClass}` } />
       })
 
