@@ -78,7 +78,7 @@ class Game extends Component {
 
   // Tick logic subscribed from Loop component
   update = () => {
-    if (this.state.currentTime % 30 === 0) this.move({x: 0, y: 1});
+    if (this.state.currentTime % 30 === 0) this.fallDown();
     this.setState({
       currentTime: this.state.currentTime + 1
     });
@@ -90,6 +90,14 @@ class Game extends Component {
       this.setState({
         piecePos: newPos
       });
+      return true;
+    }
+    return false;
+  }
+
+  fallDown() {
+    if (!this.move({ x: 0, y: 1 })) {
+      this.killPiece();
     }
   }
 
@@ -114,7 +122,7 @@ class Game extends Component {
         this.move({ x: 1, y: 0 });
         break;
       case 40:
-        this.move({x: 0, y: 1});
+        this.fallDown()
         break;
       default:
         break;
@@ -136,6 +144,26 @@ class Game extends Component {
     });
 
     return coordinates;
+  }
+
+  killPiece() {
+    let pieceCoordinates = this.calculatePieceCoordinates(this.currentShape, this.state.piecePos, true);
+
+    pieceCoordinates.forEach((piece) => {
+      this.board[piece.y][piece.x] = 1;
+    })
+
+    this.resetPiece();
+  }
+
+  resetPiece() {
+    this.currentShape = this.generatePiece(this.pieces['line'][0]);
+    this.setState({
+      piece: 'line',
+      piecePos: { x: 3, y: 0 },
+      currentPosition: 0,
+      rotation: 0
+    });
   }
 
   /*****************************
