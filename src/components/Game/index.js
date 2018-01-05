@@ -38,6 +38,8 @@ class Game extends Component {
     this.boardDimensions = { x: 10, y: 20 };
     this.board = this.generateGameBoard(this.boardDimensions);
 
+    this.score = 0;
+
     this.state = {
       currentTime: 0,
       piecePos: { x: 3, y: 0 },
@@ -53,7 +55,6 @@ class Game extends Component {
     this.updatePieceState = this.updatePieceState.bind(this);
     this.addNewPiece = this.addNewPiece.bind(this);
     this.getNextPiece = this.getNextPiece.bind(this);
-
   }
 
   componentDidMount() {
@@ -78,7 +79,7 @@ class Game extends Component {
 
   handleStop () {
     console.log(this.context.loop.loopID)
-    window.cancelAnimationFrame(this.context.loop.loopID)
+    window.cancelAnimationFrame(this.context.loop.loopID);
   }
 
   // Tick logic subscribed from Loop component
@@ -152,11 +153,44 @@ class Game extends Component {
     return coordinates;
   }
 
+
+  /**
+   * Checks if a row is complete.  Returns true if complete
+   * @param  {Array} row A board row
+   * @return {Boolean}     Returns True if complete False if not
+   */
+  checkRowForCompletion (row) {
+    return row.filter((square) => square === 0).length === 0;
+  }
+
+  /**
+   * Removes a row from the board and adds new row to top
+   * @param  {Array} board    A game board array
+   * @param  {number} rowIndex Index of row to be deleted
+   * @return {Array}          A copy and updated version of the game board.
+   */
+  removeBoardRow (board, rowIndex) {
+    const boardCopy = [].concat(board);
+    boardCopy.splice(rowIndex, 1);
+    boardCopy.unshift(this.generateBoardRow(board[0].length));
+    return boardCopy;
+  }
+
+  /**
+   * Freezes a piece at the bottom or when bottom collision occurs
+   */
   killPiece() {
     let pieceCoordinates = this.calculatePieceCoordinates(this.currentShape, this.state.piecePos, true);
 
     pieceCoordinates.forEach((piece) => {
       this.board[piece.y][piece.x] = tetrominoShapeNames.indexOf(this.state.piece) + 2;
+    });
+
+    this.board.forEach((row, index) => {
+      if (this.checkRowForCompletion(row) && index < this.board.length - 1) {
+        this.score ++;
+        this.board = this.removeBoardRow(this.board, index);
+      }
     });
 
     this.addNewPiece();
@@ -175,11 +209,8 @@ class Game extends Component {
 
     const wrapper = new Array(y + 1).fill([]);
     const board = wrapper.map((val, index) => {
-      const row = new Array(x + 2).fill(0);
-      row[0] = 1;
-      row[row.length-1] = 1;
-
-      if(index === wrapper.length - 1) {
+      const row = this.generateBoardRow(x + 2);
+      if (index === wrapper.length - 1) {
         row.fill(1);
       }
       return row;
@@ -188,6 +219,12 @@ class Game extends Component {
     return board;
   }
 
+  generateBoardRow (width) {
+    const row = new Array(width).fill(0);
+    row[0] = 1;
+    row[row.length - 1] = 1;
+    return row;
+  }
 
   /**
    * Generates a renderable board
@@ -211,7 +248,6 @@ class Game extends Component {
         if (pieceCoordinates[[index, rowIdx]]) fillClass = this.state.piece;
         return <div key={ index } style={ { height, width: height } } className={ `block ${fillClass}` } />
       })
-
     });
 
     console.log(height * x);
@@ -299,7 +335,7 @@ class Game extends Component {
     return {
       currentPosition: nextPosition,
       rotation: Math.abs(nextPosition) % 4
-    }
+    };
   }
 
   /**
@@ -377,6 +413,7 @@ class Game extends Component {
           </div>
         </div>
 
+        <div>Completed Rows { this.score }</div>
         <div className="main">
           <div className="queue">
             <h5>Next piece</h5>
