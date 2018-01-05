@@ -29,6 +29,8 @@ class Game extends Component {
     };
 
     const initialState = this.generateRandomPiece(this.pieces);
+    this.pieceQueue = new Array(5).fill(null).map(() => this.generateRandomPiece(this.pieces));
+
     const { currentPosition, rotation, piece } = initialState;
 
     this.currentShape = this.generatePiece(this.pieces[piece][rotation]);
@@ -49,6 +51,8 @@ class Game extends Component {
     this.handleRotation = this.handleRotation.bind(this);
     this.updatePieceState = this.updatePieceState.bind(this);
     this.addNewPiece = this.addNewPiece.bind(this);
+    this.getNextPiece = this.getNextPiece.bind(this);
+
   }
 
   componentDidMount() {
@@ -153,20 +157,7 @@ class Game extends Component {
       this.board[piece.y][piece.x] = 1;
     })
 
-    this.resetPiece();
-  }
-
-  resetPiece() {
-    const initialState = this.generateRandomPiece(this.pieces);
-    const { currentPosition, rotation, piece } = initialState;
-    this.currentShape = this.generatePiece(this.pieces[piece][rotation]);
-
-    this.setState({
-      piece,
-      piecePos: { x: 3, y: 0 },
-      currentPosition,
-      rotation
-    });
+    this.addNewPiece();
   }
 
   /*****************************
@@ -276,10 +267,19 @@ class Game extends Component {
    * Adds a new piece at the origin
    */
   addNewPiece () {
-    const piece = this.generateRandomPiece(this.pieces);
+    const piece = this.pieceQueue.pop();
+    this.pieceQueue.unshift(this.generateRandomPiece(this.pieces));
     piece.piecePos = { x: 3, y: 0 };
-
     this.updatePieceState(piece);
+  }
+
+  /**
+   * Utility function to retun the next built shape
+   * @return {Array} Tetromino data structure
+   */
+  getNextPiece () {
+    const { piece, rotation } = this.pieceQueue[this.pieceQueue.length - 1];
+    return this.generatePiece(this.pieces[piece][rotation]);
   }
 
   /**
@@ -369,7 +369,8 @@ class Game extends Component {
             <button onClick={ this.addNewPiece }>New Piece</button>
           </div>
 
-          <Tetromino fillClass='filled' shape={ this.currentShape } />
+          <Tetromino fillClass='filled' shape={ this.getNextPiece() } />
+
         </div>
 
         <div className="main">
@@ -382,6 +383,6 @@ class Game extends Component {
 
 Game.contextTypes = {
   loop: PropTypes.object
-}
+};
 
 export default Game;
