@@ -27,7 +27,7 @@
 }
 
 .block.border {
-  /*opacity: 0;*/
+  opacity: 0;
 }
 
 .block.line { background-color: #446FE3; }
