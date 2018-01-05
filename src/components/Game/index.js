@@ -217,7 +217,7 @@ class Game extends Component {
     console.log(height * x);
 
     return (
-      <div style={ { width: `calc(100% - ${height}px)`, height: height * y } } className="board cf">
+      <div style={ { width: height * x, height: height * y } } className="board cf">
         <div className="cf" style={ { marginLeft: `-${height}px`, width: height * (x + 2) } }>
           { squares }
         </div>
