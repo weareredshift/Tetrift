@@ -78,48 +78,54 @@ class Game extends Component {
 
   // Tick logic subscribed from Loop component
   update = () => {
-    if (this.state.currentTime % 30 === 0) this.pieceFall();
+    if (this.state.currentTime % 30 === 0) this.move({x: 0, y: 1});
     this.setState({
       currentTime: this.state.currentTime + 1
     });
   };
 
-  pieceFall() {
-    this.setState({
-      piecePos: { x: this.state.piecePos.x, y: this.state.piecePos.y + 1 }
-    });
+  move(dir) {
+    const newPos = { x: this.state.piecePos.x + dir.x, y: this.state.piecePos.y + dir.y };
+    if (this.noCollision(newPos)) {
+      this.setState({
+        piecePos: newPos
+      });
+    }
   }
 
-  moveLeft() {
-    this.setState({
-      piecePos: { x: this.state.piecePos.x - 1, y: this.state.piecePos.y }
-    });
-  }
+  noCollision(newPos) {
+    let pieceCoordinates = this.calculatePieceCoordinates(this.currentShape, newPos, true);
+    const collisions = pieceCoordinates.filter((piece) => {
+      return this.board[piece.y][piece.x] !== 0;
+    }).length;
 
-  moveRight() {
-    this.setState({
-      piecePos: { x: this.state.piecePos.x + 1, y: this.state.piecePos.y }
-    });
+    return collisions === 0;
   }
 
   handleKeyDown(event) {
     switch(event.keyCode) {
       case 37:
-        this.moveLeft();
+        this.move({ x: -1, y: 0 });
         break;
       case 39:
-        this.moveRight();
+        this.move({ x: 1, y: 0 });
         break;
       default:
         break;
     }
   }
 
-  calculatePieceCoordinates (piece, origin = {x: -1, y: -3}) {
-    let coordinates = {};
-    piece.forEach((row, rowIdx) => {
-      row.forEach((col, colIdx) => {
-        if (col) coordinates[[rowIdx + origin.x, colIdx + origin.y]] = 1;
+  calculatePieceCoordinates (piece, origin = {x: -1, y: -3}, array = false) {
+    const coordinates = array ? [] : {};
+
+    piece.forEach((row, yIndex) => {
+      row.forEach((square, xIndex) => {
+        if (square === 1) {
+          if (array)
+            coordinates.push({x: xIndex + origin.x, y: yIndex + origin.y})
+          else
+            coordinates[[xIndex + origin.x, yIndex + origin.y]] = 1;
+        }
       })
     });
 
