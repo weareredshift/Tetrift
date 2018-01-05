@@ -159,12 +159,15 @@ class Game extends Component {
   }
 
   resetPiece() {
-    this.currentShape = this.generatePiece(this.pieces['line'][0]);
+    const initialState = this.generateRandomPiece(this.pieces);
+    const { currentPosition, rotation, piece } = initialState;
+    this.currentShape = this.generatePiece(this.pieces[piece][rotation]);
+
     this.setState({
-      piece: 'line',
+      piece,
       piecePos: { x: 3, y: 0 },
-      currentPosition: 0,
-      rotation: 0
+      currentPosition,
+      rotation
     });
   }
 
