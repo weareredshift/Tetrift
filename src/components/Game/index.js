@@ -381,7 +381,7 @@ class Game extends Component {
           <div className="queue">
             <h5>Next piece</h5>
             <div className="queue__piece">
-              <Tetromino fillClass='filled' shape={ this.getNextPiece() } />
+              <Tetromino fillClass={ `filled ${this.pieceQueue[this.pieceQueue.length - 1].piece}` } shape={ this.getNextPiece() } />
             </div>
           </div>
           { board }
