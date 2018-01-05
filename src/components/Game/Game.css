@@ -11,6 +11,11 @@
 .board {
   margin: 0 auto;
   clear: both;
+  position: relative;
+  overflow: hidden;
+  padding: 0 15px 15px;
+  background: #222;
+  border-radius: 10px;
 }
 
 .block {

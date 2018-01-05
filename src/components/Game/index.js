@@ -46,7 +46,6 @@ class Game extends Component {
     this.handleStop = this.handleStop.bind(this);
     // this.onPieceUpdate = this.onPieceUpdate.bind(this);
 
-    this.boardDimensions = { x: 10, y: 20 };
     this.handleRotation = this.handleRotation.bind(this);
     this.updatePieceState = this.updatePieceState.bind(this);
   }
@@ -204,8 +203,6 @@ class Game extends Component {
     const pieceCoordinates = piece ? this.calculatePieceCoordinates(piece, piecePos) : {};
     const { x, y } = this.boardDimensions;
     const height = window.innerHeight / (y + 3);
-    const width = height * (x + 2)
-
     const squares = board.map((row, rowIdx) => {
 
       return row.map((square, index) => {
@@ -218,8 +215,10 @@ class Game extends Component {
     });
 
     return (
-      <div style={ { width } } className="board cf">
-        { squares }
+      <div style={ { width: height * x, height: height * y } } className="board cf">
+        <div style={ { marginLeft: `-${height}px`, width: height * (x + 2) } }>
+          { squares }
+        </div>
       </div>
     );
 
