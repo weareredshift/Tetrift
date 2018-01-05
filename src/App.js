@@ -5,7 +5,6 @@ import './App.css';
 import Loop from './components/Loop';
 import Game from './components/Game';
 
-
 class App extends Component {
   render() {
     return (

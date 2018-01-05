@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getRandomInt } from '../../utils/utils';
+import {
+  generateGameBoard,
+  checkRowForCompletion,
+  removeBoardRow,
+  generatePiece,
+  generateRandomPiece
+} from './gameUtils';
+
 import './Game.css';
 import {
   line,
@@ -29,14 +36,14 @@ class Game extends Component {
       sShape
     };
 
-    const initialState = this.generateRandomPiece(this.pieces);
-    this.pieceQueue = new Array(5).fill(null).map(() => this.generateRandomPiece(this.pieces));
+    const initialState = generateRandomPiece(this.pieces);
+    this.pieceQueue = new Array(5).fill(null).map(() => generateRandomPiece(this.pieces));
 
     const { currentPosition, rotation, piece } = initialState;
 
-    this.currentShape = this.generatePiece(this.pieces[piece][rotation]);
+    this.currentShape = generatePiece(this.pieces[piece][rotation]);
     this.boardDimensions = { x: 10, y: 20 };
-    this.board = this.generateGameBoard(this.boardDimensions);
+    this.board = generateGameBoard(this.boardDimensions);
 
     this.score = 0;
 
@@ -59,8 +66,8 @@ class Game extends Component {
 
   componentDidMount() {
     this.context.loop.subscribe(this.update);
-    this.board = this.generateGameBoard(this.boardDimensions);
-    document.addEventListener("keydown", this.handleKeyDown.bind(this));
+    this.board = generateGameBoard(this.boardDimensions);
+    document.addEventListener('keydown', this.handleKeyDown.bind(this));
   }
 
   componentWillUnmount() {
@@ -72,13 +79,10 @@ class Game extends Component {
   *****************************/
 
   handleStart () {
-    console.log(this.context.loop.loopID)
-
-    this.context.loop.start()
+    this.context.loop.start();
   }
 
   handleStop () {
-    console.log(this.context.loop.loopID)
     window.cancelAnimationFrame(this.context.loop.loopID);
   }
 
@@ -110,15 +114,13 @@ class Game extends Component {
   noCollision(newPos, shape) {
     let currentShape = shape ? shape : this.currentShape;
     let pieceCoordinates = this.calculatePieceCoordinates(currentShape, newPos, true);
-    const collisions = pieceCoordinates.filter((piece) => {
-      return this.board[piece.y][piece.x] !== 0;
-    }).length;
+    const collisions = pieceCoordinates.filter((piece) => this.board[piece.y][piece.x] !== 0).length;
 
     return collisions === 0;
   }
 
   handleKeyDown(event) {
-    switch(event.keyCode) {
+    switch (event.keyCode) {
       case 37:
         this.move({ x: -1, y: 0 });
         break;
@@ -129,51 +131,28 @@ class Game extends Component {
         this.move({ x: 1, y: 0 });
         break;
       case 40:
-        this.fallDown()
+        this.fallDown();
         break;
       default:
         break;
     }
   }
 
-  calculatePieceCoordinates (piece, origin = {x: -1, y: -3}, array = false) {
+  calculatePieceCoordinates (piece, origin = { x: -1, y: -3 }, array = false) {
     const coordinates = array ? [] : {};
 
     piece.forEach((row, yIndex) => {
       row.forEach((square, xIndex) => {
         if (square === 1) {
           if (array)
-            coordinates.push({x: xIndex + origin.x, y: yIndex + origin.y})
+            coordinates.push({ x: xIndex + origin.x, y: yIndex + origin.y });
           else
             coordinates[[xIndex + origin.x, yIndex + origin.y]] = 1;
         }
-      })
+      });
     });
 
     return coordinates;
-  }
-
-
-  /**
-   * Checks if a row is complete.  Returns true if complete
-   * @param  {Array} row A board row
-   * @return {Boolean}     Returns True if complete False if not
-   */
-  checkRowForCompletion (row) {
-    return row.filter((square) => square === 0).length === 0;
-  }
-
-  /**
-   * Removes a row from the board and adds new row to top
-   * @param  {Array} board    A game board array
-   * @param  {number} rowIndex Index of row to be deleted
-   * @return {Array}          A copy and updated version of the game board.
-   */
-  removeBoardRow (board, rowIndex) {
-    const boardCopy = [].concat(board);
-    boardCopy.splice(rowIndex, 1);
-    boardCopy.unshift(this.generateBoardRow(board[0].length));
-    return boardCopy;
   }
 
   /**
@@ -187,43 +166,13 @@ class Game extends Component {
     });
 
     this.board.forEach((row, index) => {
-      if (this.checkRowForCompletion(row) && index < this.board.length - 1) {
+      if (checkRowForCompletion(row) && index < this.board.length - 1) {
         this.score ++;
-        this.board = this.removeBoardRow(this.board, index);
+        this.board = removeBoardRow(this.board, index);
       }
     });
 
     this.addNewPiece();
-  }
-
-  /*****************************
-  * Game Board Setup
-  *****************************/
-
-  /**
-   * Creates an empty game board
-   * @return {Array} Returns associative array as the game board
-   */
-  generateGameBoard (dimensions) {
-    const { x, y } = dimensions;
-
-    const wrapper = new Array(y + 1).fill([]);
-    const board = wrapper.map((val, index) => {
-      const row = this.generateBoardRow(x + 2);
-      if (index === wrapper.length - 1) {
-        row.fill(1);
-      }
-      return row;
-    });
-
-    return board;
-  }
-
-  generateBoardRow (width) {
-    const row = new Array(width).fill(0);
-    row[0] = 1;
-    row[row.length - 1] = 1;
-    return row;
   }
 
   /**
@@ -238,19 +187,14 @@ class Game extends Component {
     const { x, y } = this.boardDimensions;
     const height = window.innerHeight / (y + 2);
 
-    const squares = board.map((row, rowIdx) => {
-
-      return row.map((square, index) => {
-        let fillClass = 'empty';
-        if (square) {
-          fillClass = `filled ${pieceColors[square]}`;
-        };
-        if (pieceCoordinates[[index, rowIdx]]) fillClass = `filled ${this.state.piece}`;
-        return <div key={ index } style={ { height, width: height } } className={ `block ${fillClass}` } />
-      })
-    });
-
-    console.log(height * x);
+    const squares = board.map((row, rowIdx) => row.map((square, index) => {
+      let fillClass = 'empty';
+      if (square) {
+        fillClass = `filled ${pieceColors[square]}`;
+      }
+      if (pieceCoordinates[[index, rowIdx]]) fillClass = `filled ${this.state.piece}`;
+      return <div key={ index } style={ { height, width: height } } className={ `block ${fillClass}` } />;
+    }));
 
     return (
       <div style={ { width: height * x, height: height * y } } className="board cf">
@@ -259,50 +203,6 @@ class Game extends Component {
         </div>
       </div>
     );
-
-  }
-
-  /*****************************
-  * Tetronimo Setup
-  *****************************/
-  /**
-   * Creates a tetromino piece data structure
-   * @param  {Array} activeSquares An array of four tuples that define the filled squares
-   * @return {Array}               A tetromino data structure (associative array)
-   */
-  generatePiece (activeSquares) {
-    const pieceGrid =  [
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
-      ];
-
-    activeSquares.forEach((coord, index) => {
-      const row = coord[0];
-      const column = coord[1];
-
-      pieceGrid[row][column] = 1;
-    });
-
-    return pieceGrid;
-  }
-
-  /**
-   * Creates the values for creating a randomly selected Tetromino
-   * @param  {Object} shapes Object of Tetrominos
-   * @return {Object}        State values for creating a piece
-   */
-  generateRandomPiece (shapes) {
-    const pieceList = Object.keys(shapes);
-    const piece = pieceList[getRandomInt(0, pieceList.length)];
-    const shape = shapes[piece];
-    const rotation = getRandomInt(0, shape.length);
-    return {
-      piece,
-      rotation,
-      currentPosition: rotation
-    };
   }
 
   /**
@@ -310,7 +210,7 @@ class Game extends Component {
    */
   addNewPiece () {
     const piece = this.pieceQueue.pop();
-    this.pieceQueue.unshift(this.generateRandomPiece(this.pieces));
+    this.pieceQueue.unshift(generateRandomPiece(this.pieces));
     piece.piecePos = { x: 3, y: 0 };
     this.updatePieceState(piece);
   }
@@ -321,7 +221,7 @@ class Game extends Component {
    */
   getNextPiece () {
     const { piece, rotation } = this.pieceQueue[this.pieceQueue.length - 1];
-    return this.generatePiece(this.pieces[piece][rotation]);
+    return generatePiece(this.pieces[piece][rotation]);
   }
 
   /**
@@ -347,7 +247,7 @@ class Game extends Component {
     const { piece, rotation } = updatedState;
 
     const thisPiece = this.pieces[piece];
-    this.currentShape = this.generatePiece(thisPiece[rotation]);
+    this.currentShape = generatePiece(thisPiece[rotation]);
 
     this.setState(updatedState, callback);
   }
@@ -358,7 +258,7 @@ class Game extends Component {
    */
   handleRotation (direction) {
     const pieceConfig = this.rotatePiece(direction, this.state.currentPosition);
-    if (this.noCollision(this.state.piecePos, this.generatePiece(this.pieces[this.state.piece][pieceConfig.rotation])))
+    if (this.noCollision(this.state.piecePos, generatePiece(this.pieces[this.state.piece][pieceConfig.rotation])))
       this.updatePieceState(pieceConfig);
   }
 
@@ -373,14 +273,14 @@ class Game extends Component {
    */
   renderPieceSelect (pieces) {
     const options = pieces.map((piece, index) => (
-        <option value={piece} key={index}> {piece} </option>
-      )
+      <option value={ piece } key={ index }> {piece} </option>
+    )
     );
 
     return (
       <select onChange={ (event) => {
-        this.updatePieceState({rotation: 0, piece: event.target.value});
-      }}
+        this.updatePieceState({ rotation: 0, piece: event.target.value });
+      } }
       >
         { options }
       </select>
@@ -407,8 +307,8 @@ class Game extends Component {
 
           <div className="controls">
             { pieceSelect }
-            <button onClick={ () => { this.handleRotation.call(this, 'right') } }>Rotate Right</button>
-            <button onClick={ () => { this.handleRotation.call(this, 'left') } }>Rotate Left</button>
+            <button onClick={ () => { this.handleRotation.call(this, 'right'); } }>Rotate Right</button>
+            <button onClick={ () => { this.handleRotation.call(this, 'left'); } }>Rotate Left</button>
             <button onClick={ this.addNewPiece }>New Piece</button>
           </div>
         </div>
