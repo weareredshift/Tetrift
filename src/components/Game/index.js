@@ -51,6 +51,8 @@ class Game extends Component {
     this.handleRotation = this.handleRotation.bind(this);
     this.updatePieceState = this.updatePieceState.bind(this);
     this.addNewPiece = this.addNewPiece.bind(this);
+    this.getNextPiece = this.getNextPiece.bind(this);
+
   }
 
   componentDidMount() {
@@ -272,6 +274,15 @@ class Game extends Component {
   }
 
   /**
+   * Utility function to retun the next built shape
+   * @return {Array} Tetromino data structure
+   */
+  getNextPiece () {
+    const { piece, rotation } = this.pieceQueue[this.pieceQueue.length - 1];
+    return this.generatePiece(this.pieces[piece][rotation]);
+  }
+
+  /**
    * Rotates a piece to the next position, either left or right
    * @param  {String} direction       A rotation direction, either 'right' or 'left'
    * @param  {Number} currentPosition The current rotation index
@@ -358,7 +369,8 @@ class Game extends Component {
             <button onClick={ this.addNewPiece }>New Piece</button>
           </div>
 
-          <Tetromino fillClass='filled' shape={ this.currentShape } />
+          <Tetromino fillClass='filled' shape={ this.getNextPiece() } />
+
         </div>
 
         <div className="main">
@@ -371,6 +383,6 @@ class Game extends Component {
 
 Game.contextTypes = {
   loop: PropTypes.object
-}
+};
 
 export default Game;
