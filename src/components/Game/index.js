@@ -63,7 +63,6 @@ class Game extends Component {
 
   handleStart () {
     console.log(this.context.loop.loopID)
-
     this.context.loop.start()
   }
 
@@ -74,6 +73,8 @@ class Game extends Component {
 
   // Tick logic subscribed from Loop component
   update = () => {
+
+    // TODO: its possible for the tick to skip a number
     if (this.state.currentTime % 30 === 0) this.pieceMoveDown();
     this.setState({
       currentTime: this.state.currentTime + 1
