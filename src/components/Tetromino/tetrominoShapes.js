@@ -57,6 +57,17 @@ export const tetrominos = {
   sShape
 };
 
+export const pieceColors = {
+  1: 'border',
+  2: 'line',
+  3: 'square',
+  4: 'lShape',
+  5: 'jShape',
+  6: 'tShape',
+  7: 'zShape',
+  8: 'sShape'
+};
+
 export const tetrominoShapeNames = Object.keys(tetrominos);
 
 export default tetrominos;

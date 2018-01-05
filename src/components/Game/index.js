@@ -9,11 +9,12 @@ import {
   jShape,
   tShape,
   zShape,
-  sShape
+  sShape,
+  tetrominoShapeNames,
+  pieceColors
 } from '../Tetromino/tetrominoShapes';
 
 import Tetromino from '../Tetromino';
-
 class Game extends Component {
   constructor(props) {
     super(props);
@@ -105,8 +106,9 @@ class Game extends Component {
     }
   }
 
-  noCollision(newPos) {
-    let pieceCoordinates = this.calculatePieceCoordinates(this.currentShape, newPos, true);
+  noCollision(newPos, shape) {
+    let currentShape = shape ? shape : this.currentShape;
+    let pieceCoordinates = this.calculatePieceCoordinates(currentShape, newPos, true);
     const collisions = pieceCoordinates.filter((piece) => {
       return this.board[piece.y][piece.x] !== 0;
     }).length;
@@ -154,8 +156,8 @@ class Game extends Component {
     let pieceCoordinates = this.calculatePieceCoordinates(this.currentShape, this.state.piecePos, true);
 
     pieceCoordinates.forEach((piece) => {
-      this.board[piece.y][piece.x] = 1;
-    })
+      this.board[piece.y][piece.x] = tetrominoShapeNames.indexOf(this.state.piece) + 2;
+    });
 
     this.addNewPiece();
   }
@@ -203,8 +205,10 @@ class Game extends Component {
 
       return row.map((square, index) => {
         let fillClass = 'empty';
-        if (square) fillClass = 'border';
-        if (pieceCoordinates[[index, rowIdx]]) fillClass = 'filled'
+        if (square) {
+          fillClass = pieceColors[square];
+        };
+        if (pieceCoordinates[[index, rowIdx]]) fillClass = this.state.piece;
         return <div key={ index } style={ { height, width: height } } className={ `block ${fillClass}` } />
       })
 
@@ -318,7 +322,8 @@ class Game extends Component {
    */
   handleRotation (direction) {
     const pieceConfig = this.rotatePiece(direction, this.state.currentPosition);
-    this.updatePieceState(pieceConfig);
+    if (this.noCollision(this.state.piecePos, this.generatePiece(this.pieces[this.state.piece][pieceConfig.rotation])))
+      this.updatePieceState(pieceConfig);
   }
 
   /*****************************
