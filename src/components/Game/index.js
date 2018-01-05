@@ -38,6 +38,8 @@ class Game extends Component {
     this.boardDimensions = { x: 10, y: 20 };
     this.board = this.generateGameBoard(this.boardDimensions);
 
+    this.score = 0;
+
     this.state = {
       currentTime: 0,
       piecePos: { x: 3, y: 0 },
@@ -186,6 +188,7 @@ class Game extends Component {
 
     this.board.forEach((row, index) => {
       if (this.checkRowForCompletion(row) && index < this.board.length - 1) {
+        this.score ++;
         this.board = this.removeBoardRow(this.board, index);
       }
     });
@@ -410,6 +413,7 @@ class Game extends Component {
           </div>
         </div>
 
+        <div>Completed Rows { this.score }</div>
         <div className="main">
           <div className="queue">
             <h5>Next piece</h5>
