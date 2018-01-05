@@ -323,6 +323,11 @@ class Game extends Component {
           </div>
           { board }
         </div>
+        <div className="audio">
+          <audio autoPlay controls>
+            <source src={ require('../../assets/music/tetris-gameboy-02.mp3') } type="audio/mpeg" />
+          </audio>
+        </div>
       </div>
     );
   }
