@@ -64,3 +64,9 @@
   padding-bottom: calc(25% - 2px);
   height: 0;
 }
+
+.audio {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
