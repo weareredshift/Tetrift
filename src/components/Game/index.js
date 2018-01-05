@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { getRandomInt } from '../../utils/utils';
 import './Game.css';
 import {
   line,
@@ -28,17 +29,19 @@ class Game extends Component {
       sShape
     };
 
-    this.currentShape = this.generatePiece(this.pieces['line'][0]);
+    const initialState = this.generateRandomPiece(this.pieces);
+    const { currentPosition, rotation, piece } = initialState;
+
+    this.currentShape = this.generatePiece(this.pieces[piece][rotation]);
     this.boardDimensions = { x: 10, y: 20 };
     this.board = this.generateGameBoard(this.boardDimensions);
 
-
     this.state = {
       currentTime: 0,
-      piece: 'line',
       piecePos: { x: 3, y: 0 },
-      currentPosition: 0,
-      rotation: 0
+      piece,
+      currentPosition,
+      rotation
     };
 
     // Bind functions
@@ -208,7 +211,7 @@ class Game extends Component {
       return row.map((square, index) => {
         let fillClass = 'empty';
         if (square) fillClass = 'border';
-        if (pieceCoordinates[[index, rowIdx]]) fillClass = `filled ${ this.state.piece}`
+        if (pieceCoordinates[[index, rowIdx]]) fillClass = 'filled'
         return <div key={ index } style={ { height, width: height } } className={ `block ${fillClass}` } />
       })
 
@@ -248,6 +251,24 @@ class Game extends Component {
     });
 
     return pieceGrid;
+  }
+
+
+  /**
+   * Creates the values for creating a randomly selected Tetromino
+   * @param  {Object} shapes Object of Tetrominos
+   * @return {Object}        State values for creating a piece
+   */
+  generateRandomPiece (shapes) {
+    const pieceList = Object.keys(shapes);
+    const piece = pieceList[getRandomInt(0, pieceList.length)];
+    const shape = shapes[piece];
+    const rotation = getRandomInt(0, shape.length);
+    return {
+      piece,
+      rotation,
+      currentPosition: rotation
+    };
   }
 
   /**
@@ -337,7 +358,7 @@ class Game extends Component {
             <button onClick={ () => { this.handleRotation.call(this, 'left') } }>Rotate Left</button>
           </div>
 
-          <Tetromino fillClass={ this.state.piece } shape={ this.currentShape } />
+          <Tetromino fillClass='filled' shape={ this.currentShape } />
         </div>
 
         <div className="main">
