@@ -60,7 +60,7 @@ class Game extends Component {
   componentDidMount() {
     this.context.loop.subscribe(this.update);
     this.board = this.generateGameBoard(this.boardDimensions);
-    document.addEventListener("keydown", this.handleKeyDown.bind(this));
+    document.addEventListener('keydown', this.handleKeyDown.bind(this));
   }
 
   componentWillUnmount() {
@@ -72,13 +72,10 @@ class Game extends Component {
   *****************************/
 
   handleStart () {
-    console.log(this.context.loop.loopID)
-
-    this.context.loop.start()
+    this.context.loop.start();
   }
 
   handleStop () {
-    console.log(this.context.loop.loopID)
     window.cancelAnimationFrame(this.context.loop.loopID);
   }
 
@@ -110,15 +107,13 @@ class Game extends Component {
   noCollision(newPos, shape) {
     let currentShape = shape ? shape : this.currentShape;
     let pieceCoordinates = this.calculatePieceCoordinates(currentShape, newPos, true);
-    const collisions = pieceCoordinates.filter((piece) => {
-      return this.board[piece.y][piece.x] !== 0;
-    }).length;
+    const collisions = pieceCoordinates.filter((piece) => this.board[piece.y][piece.x] !== 0).length;
 
     return collisions === 0;
   }
 
   handleKeyDown(event) {
-    switch(event.keyCode) {
+    switch (event.keyCode) {
       case 37:
         this.move({ x: -1, y: 0 });
         break;
@@ -129,30 +124,29 @@ class Game extends Component {
         this.move({ x: 1, y: 0 });
         break;
       case 40:
-        this.fallDown()
+        this.fallDown();
         break;
       default:
         break;
     }
   }
 
-  calculatePieceCoordinates (piece, origin = {x: -1, y: -3}, array = false) {
+  calculatePieceCoordinates (piece, origin = { x: -1, y: -3 }, array = false) {
     const coordinates = array ? [] : {};
 
     piece.forEach((row, yIndex) => {
       row.forEach((square, xIndex) => {
         if (square === 1) {
           if (array)
-            coordinates.push({x: xIndex + origin.x, y: yIndex + origin.y})
+            coordinates.push({ x: xIndex + origin.x, y: yIndex + origin.y });
           else
             coordinates[[xIndex + origin.x, yIndex + origin.y]] = 1;
         }
-      })
+      });
     });
 
     return coordinates;
   }
-
 
   /**
    * Checks if a row is complete.  Returns true if complete
@@ -238,19 +232,14 @@ class Game extends Component {
     const { x, y } = this.boardDimensions;
     const height = window.innerHeight / (y + 2);
 
-    const squares = board.map((row, rowIdx) => {
-
-      return row.map((square, index) => {
-        let fillClass = 'empty';
-        if (square) {
-          fillClass = `filled ${pieceColors[square]}`;
-        };
-        if (pieceCoordinates[[index, rowIdx]]) fillClass = `filled ${this.state.piece}`;
-        return <div key={ index } style={ { height, width: height } } className={ `block ${fillClass}` } />
-      })
-    });
-
-    console.log(height * x);
+    const squares = board.map((row, rowIdx) => row.map((square, index) => {
+      let fillClass = 'empty';
+      if (square) {
+        fillClass = `filled ${pieceColors[square]}`;
+      }
+      if (pieceCoordinates[[index, rowIdx]]) fillClass = `filled ${this.state.piece}`;
+      return <div key={ index } style={ { height, width: height } } className={ `block ${fillClass}` } />;
+    }));
 
     return (
       <div style={ { width: height * x, height: height * y } } className="board cf">
@@ -259,7 +248,6 @@ class Game extends Component {
         </div>
       </div>
     );
-
   }
 
   /*****************************
@@ -271,14 +259,14 @@ class Game extends Component {
    * @return {Array}               A tetromino data structure (associative array)
    */
   generatePiece (activeSquares) {
-    const pieceGrid =  [
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
-      ];
+    const pieceGrid = [
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0]
+    ];
 
-    activeSquares.forEach((coord, index) => {
+    activeSquares.forEach((coord) => {
       const row = coord[0];
       const column = coord[1];
 
@@ -373,14 +361,14 @@ class Game extends Component {
    */
   renderPieceSelect (pieces) {
     const options = pieces.map((piece, index) => (
-        <option value={piece} key={index}> {piece} </option>
-      )
+      <option value={ piece } key={ index }> {piece} </option>
+    )
     );
 
     return (
       <select onChange={ (event) => {
-        this.updatePieceState({rotation: 0, piece: event.target.value});
-      }}
+        this.updatePieceState({ rotation: 0, piece: event.target.value });
+      } }
       >
         { options }
       </select>
@@ -407,8 +395,8 @@ class Game extends Component {
 
           <div className="controls">
             { pieceSelect }
-            <button onClick={ () => { this.handleRotation.call(this, 'right') } }>Rotate Right</button>
-            <button onClick={ () => { this.handleRotation.call(this, 'left') } }>Rotate Left</button>
+            <button onClick={ () => { this.handleRotation.call(this, 'right'); } }>Rotate Right</button>
+            <button onClick={ () => { this.handleRotation.call(this, 'left'); } }>Rotate Left</button>
             <button onClick={ this.addNewPiece }>New Piece</button>
           </div>
         </div>

@@ -35,7 +35,7 @@ class Loop extends Component {
 Loop.propTypes = {
   children: PropTypes.any,
   style: PropTypes.object
-}
+};
 
 Loop.childContextTypes = {
   loop: PropTypes.object

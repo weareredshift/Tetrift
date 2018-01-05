@@ -1,5 +1,6 @@
 import React from 'react';
 import './Tetromino.css';
+import { string, array } from 'prop-types';
 
 /**
 * Generates a 4 x 4 grid representing a Tetronimo
@@ -10,10 +11,10 @@ import './Tetromino.css';
 */
 const Tetronimo = ({ shape, fillClass }) => {
   const renderedRows = shape.map((row, index) => {
-     const rows = row.map((square, i) => {
+    const rows = row.map((square, i) => {
       const filled = square ? `filled ${fillClass}` : 'empty';
-      return <div className={ `block ${filled}` } key={ i } />
-     });
+      return <div className={ `block ${filled}` } key={ i } />;
+    });
     return (
       <div className="row" key={ index }>
         { rows }
@@ -28,6 +29,11 @@ const Tetronimo = ({ shape, fillClass }) => {
       </div>
     </div>
   );
-}
+};
+
+Tetronimo.propTypes = {
+  shape: string,
+  fillClass: array
+};
 
 export default Tetronimo;
