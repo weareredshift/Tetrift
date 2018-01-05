@@ -243,9 +243,9 @@ class Game extends Component {
       return row.map((square, index) => {
         let fillClass = 'empty';
         if (square) {
-          fillClass = pieceColors[square];
+          fillClass = `filled ${pieceColors[square]}`;
         };
-        if (pieceCoordinates[[index, rowIdx]]) fillClass = this.state.piece;
+        if (pieceCoordinates[[index, rowIdx]]) fillClass = `filled ${this.state.piece}`;
         return <div key={ index } style={ { height, width: height } } className={ `block ${fillClass}` } />
       })
     });
@@ -253,7 +253,7 @@ class Game extends Component {
     console.log(height * x);
 
     return (
-      <div style={ { width: `calc(100% - ${height}px)`, height: height * y } } className="board cf">
+      <div style={ { width: height * x, height: height * y } } className="board cf">
         <div className="cf" style={ { marginLeft: `-${height}px`, width: height * (x + 2) } }>
           { squares }
         </div>
@@ -418,7 +418,7 @@ class Game extends Component {
           <div className="queue">
             <h5>Next piece</h5>
             <div className="queue__piece">
-              <Tetromino fillClass='filled' shape={ this.getNextPiece() } />
+              <Tetromino fillClass={ `filled ${this.pieceQueue[this.pieceQueue.length - 1].piece}` } shape={ this.getNextPiece() } />
             </div>
           </div>
           { board }
