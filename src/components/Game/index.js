@@ -252,7 +252,6 @@ class Game extends Component {
     return pieceGrid;
   }
 
-
   /**
    * Creates the values for creating a randomly selected Tetromino
    * @param  {Object} shapes Object of Tetrominos
@@ -316,7 +315,6 @@ class Game extends Component {
     const pieceConfig = this.rotatePiece(direction, this.state.currentPosition);
     this.updatePieceState(pieceConfig);
   }
-
 
   /*****************************
   * On Screen Controls
@@ -382,6 +380,5 @@ class Game extends Component {
 Game.contextTypes = {
   loop: PropTypes.object
 }
-
 
 export default Game;
