@@ -374,6 +374,12 @@ class Game extends Component {
         </div>
 
         <div className="main">
+          <div className="queue">
+            <h5>Next piece</h5>
+            <div className="queue__piece">
+
+            </div>
+          </div>
           { board }
         </div>
       </div>
