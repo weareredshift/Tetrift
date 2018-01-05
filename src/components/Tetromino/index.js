@@ -32,8 +32,8 @@ const Tetronimo = ({ shape, fillClass }) => {
 };
 
 Tetronimo.propTypes = {
-  shape: string,
-  fillClass: array
+  shape: array,
+  fillClass: string
 };
 
 export default Tetronimo;
