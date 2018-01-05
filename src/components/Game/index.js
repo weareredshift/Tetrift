@@ -197,7 +197,7 @@ class Game extends Component {
   renderGameBoard (board, piece, piecePos) {
     const pieceCoordinates = piece ? this.calculatePieceCoordinates(piece, piecePos) : {};
     const { x, y } = this.boardDimensions;
-    const height = window.innerHeight / (y + 3);
+    const height = window.innerHeight / (y + 2);
 
     const squares = board.map((row, rowIdx) => {
 
@@ -210,9 +210,11 @@ class Game extends Component {
 
     });
 
+    console.log(height * x);
+
     return (
-      <div style={ { width: height * x, height: height * y } } className="board cf">
-        <div style={ { marginLeft: `-${height}px`, width: height * (x + 2) } }>
+      <div style={ { width: `calc(100% - ${height}px)`, height: height * y } } className="board cf">
+        <div className="cf" style={ { marginLeft: `-${height}px`, width: height * (x + 2) } }>
           { squares }
         </div>
       </div>
@@ -368,12 +370,15 @@ class Game extends Component {
             <button onClick={ () => { this.handleRotation.call(this, 'left') } }>Rotate Left</button>
             <button onClick={ this.addNewPiece }>New Piece</button>
           </div>
-
-          <Tetromino fillClass='filled' shape={ this.getNextPiece() } />
-
         </div>
 
         <div className="main">
+          <div className="queue">
+            <h5>Next piece</h5>
+            <div className="queue__piece">
+              <Tetromino fillClass='filled' shape={ this.getNextPiece() } />
+            </div>
+          </div>
           { board }
         </div>
       </div>
