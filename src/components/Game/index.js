@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getRandomInt } from '../../utils/utils';
+import {
+  generateGameBoard,
+  checkRowForCompletion,
+  removeBoardRow,
+  generatePiece,
+  generateRandomPiece
+} from './gameUtils';
+
 import './Game.css';
 import {
   line,
@@ -29,14 +36,14 @@ class Game extends Component {
       sShape
     };
 
-    const initialState = this.generateRandomPiece(this.pieces);
-    this.pieceQueue = new Array(5).fill(null).map(() => this.generateRandomPiece(this.pieces));
+    const initialState = generateRandomPiece(this.pieces);
+    this.pieceQueue = new Array(5).fill(null).map(() => generateRandomPiece(this.pieces));
 
     const { currentPosition, rotation, piece } = initialState;
 
-    this.currentShape = this.generatePiece(this.pieces[piece][rotation]);
+    this.currentShape = generatePiece(this.pieces[piece][rotation]);
     this.boardDimensions = { x: 10, y: 20 };
-    this.board = this.generateGameBoard(this.boardDimensions);
+    this.board = generateGameBoard(this.boardDimensions);
 
     this.score = 0;
 
@@ -59,7 +66,7 @@ class Game extends Component {
 
   componentDidMount() {
     this.context.loop.subscribe(this.update);
-    this.board = this.generateGameBoard(this.boardDimensions);
+    this.board = generateGameBoard(this.boardDimensions);
     document.addEventListener('keydown', this.handleKeyDown.bind(this));
   }
 
@@ -149,28 +156,6 @@ class Game extends Component {
   }
 
   /**
-   * Checks if a row is complete.  Returns true if complete
-   * @param  {Array} row A board row
-   * @return {Boolean}     Returns True if complete False if not
-   */
-  checkRowForCompletion (row) {
-    return row.filter((square) => square === 0).length === 0;
-  }
-
-  /**
-   * Removes a row from the board and adds new row to top
-   * @param  {Array} board    A game board array
-   * @param  {number} rowIndex Index of row to be deleted
-   * @return {Array}          A copy and updated version of the game board.
-   */
-  removeBoardRow (board, rowIndex) {
-    const boardCopy = [].concat(board);
-    boardCopy.splice(rowIndex, 1);
-    boardCopy.unshift(this.generateBoardRow(board[0].length));
-    return boardCopy;
-  }
-
-  /**
    * Freezes a piece at the bottom or when bottom collision occurs
    */
   killPiece() {
@@ -181,43 +166,13 @@ class Game extends Component {
     });
 
     this.board.forEach((row, index) => {
-      if (this.checkRowForCompletion(row) && index < this.board.length - 1) {
+      if (checkRowForCompletion(row) && index < this.board.length - 1) {
         this.score ++;
-        this.board = this.removeBoardRow(this.board, index);
+        this.board = removeBoardRow(this.board, index);
       }
     });
 
     this.addNewPiece();
-  }
-
-  /*****************************
-  * Game Board Setup
-  *****************************/
-
-  /**
-   * Creates an empty game board
-   * @return {Array} Returns associative array as the game board
-   */
-  generateGameBoard (dimensions) {
-    const { x, y } = dimensions;
-
-    const wrapper = new Array(y + 1).fill([]);
-    const board = wrapper.map((val, index) => {
-      const row = this.generateBoardRow(x + 2);
-      if (index === wrapper.length - 1) {
-        row.fill(1);
-      }
-      return row;
-    });
-
-    return board;
-  }
-
-  generateBoardRow (width) {
-    const row = new Array(width).fill(0);
-    row[0] = 1;
-    row[row.length - 1] = 1;
-    return row;
   }
 
   /**
@@ -250,55 +205,12 @@ class Game extends Component {
     );
   }
 
-  /*****************************
-  * Tetronimo Setup
-  *****************************/
-  /**
-   * Creates a tetromino piece data structure
-   * @param  {Array} activeSquares An array of four tuples that define the filled squares
-   * @return {Array}               A tetromino data structure (associative array)
-   */
-  generatePiece (activeSquares) {
-    const pieceGrid = [
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0]
-    ];
-
-    activeSquares.forEach((coord) => {
-      const row = coord[0];
-      const column = coord[1];
-
-      pieceGrid[row][column] = 1;
-    });
-
-    return pieceGrid;
-  }
-
-  /**
-   * Creates the values for creating a randomly selected Tetromino
-   * @param  {Object} shapes Object of Tetrominos
-   * @return {Object}        State values for creating a piece
-   */
-  generateRandomPiece (shapes) {
-    const pieceList = Object.keys(shapes);
-    const piece = pieceList[getRandomInt(0, pieceList.length)];
-    const shape = shapes[piece];
-    const rotation = getRandomInt(0, shape.length);
-    return {
-      piece,
-      rotation,
-      currentPosition: rotation
-    };
-  }
-
   /**
    * Adds a new piece at the origin
    */
   addNewPiece () {
     const piece = this.pieceQueue.pop();
-    this.pieceQueue.unshift(this.generateRandomPiece(this.pieces));
+    this.pieceQueue.unshift(generateRandomPiece(this.pieces));
     piece.piecePos = { x: 3, y: 0 };
     this.updatePieceState(piece);
   }
@@ -309,7 +221,7 @@ class Game extends Component {
    */
   getNextPiece () {
     const { piece, rotation } = this.pieceQueue[this.pieceQueue.length - 1];
-    return this.generatePiece(this.pieces[piece][rotation]);
+    return generatePiece(this.pieces[piece][rotation]);
   }
 
   /**
@@ -335,7 +247,7 @@ class Game extends Component {
     const { piece, rotation } = updatedState;
 
     const thisPiece = this.pieces[piece];
-    this.currentShape = this.generatePiece(thisPiece[rotation]);
+    this.currentShape = generatePiece(thisPiece[rotation]);
 
     this.setState(updatedState, callback);
   }
@@ -346,7 +258,7 @@ class Game extends Component {
    */
   handleRotation (direction) {
     const pieceConfig = this.rotatePiece(direction, this.state.currentPosition);
-    if (this.noCollision(this.state.piecePos, this.generatePiece(this.pieces[this.state.piece][pieceConfig.rotation])))
+    if (this.noCollision(this.state.piecePos, generatePiece(this.pieces[this.state.piece][pieceConfig.rotation])))
       this.updatePieceState(pieceConfig);
   }
 

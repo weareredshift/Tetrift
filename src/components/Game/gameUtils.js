@@ -1,0 +1,97 @@
+import { getRandomInt } from '../../utils/utils';
+
+/*****************************
+* Game Board Setup
+*****************************/
+
+export function generateBoardRow (width) {
+  const row = new Array(width).fill(0);
+  row[0] = 1;
+  row[row.length - 1] = 1;
+  return row;
+}
+
+/**
+ * Creates an empty game board
+ * @return {Array} Returns associative array as the game board
+ */
+export function generateGameBoard (dimensions) {
+  const { x, y } = dimensions;
+
+  const wrapper = new Array(y + 1).fill([]);
+  const board = wrapper.map((val, index) => {
+    const row = generateBoardRow(x + 2);
+    if (index === wrapper.length - 1) {
+      row.fill(1);
+    }
+    return row;
+  });
+
+  return board;
+}
+
+/**
+ * Checks if a row is complete.  Returns true if complete
+ * @param  {Array} row A board row
+ * @return {Boolean}     Returns True if complete False if not
+ */
+export function checkRowForCompletion (row) {
+  return row.filter((square) => square === 0).length === 0;
+}
+
+/**
+ * Removes a row from the board and adds new row to top
+ * @param  {Array} board    A game board array
+ * @param  {number} rowIndex Index of row to be deleted
+ * @return {Array}          A copy and updated version of the game board.
+ */
+export function removeBoardRow (board, rowIndex) {
+  const boardCopy = [].concat(board);
+  boardCopy.splice(rowIndex, 1);
+  boardCopy.unshift(generateBoardRow(board[0].length));
+  return boardCopy;
+}
+
+/*****************************
+* Tetronimo Setup
+*****************************/
+/**
+ * Creates a tetromino piece data structure
+ * @param  {Array} activeSquares An array of four tuples that define the filled squares
+ * @return {Array}               A tetromino data structure (associative array)
+ */
+export function generatePiece (activeSquares) {
+  const pieceGrid = [
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0]
+  ];
+
+  activeSquares.forEach((coord) => {
+    const row = coord[0];
+    const column = coord[1];
+
+    pieceGrid[row][column] = 1;
+  });
+
+  return pieceGrid;
+}
+
+/**
+ * Creates the values for creating a randomly selected Tetromino
+ * @param  {Object} shapes Object of Tetrominos
+ * @return {Object}        State values for creating a piece
+ */
+export function generateRandomPiece (shapes) {
+  const pieceList = Object.keys(shapes);
+  const piece = pieceList[getRandomInt(0, pieceList.length)];
+  const shape = shapes[piece];
+  const rotation = getRandomInt(0, shape.length);
+  return {
+    piece,
+    rotation,
+    currentPosition: rotation
+  };
+}
+
