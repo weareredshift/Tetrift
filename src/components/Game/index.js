@@ -12,7 +12,6 @@ import {
   sShape
 } from '../Tetromino/tetrominoShapes';
 
-// import { tetrominoShapeNames } from '../Tetromino/tetrominoShapes';
 import Tetromino from '../Tetromino';
 
 class Game extends Component {
@@ -47,10 +46,9 @@ class Game extends Component {
     // Bind functions
     this.handleStart = this.handleStart.bind(this);
     this.handleStop = this.handleStop.bind(this);
-    // this.onPieceUpdate = this.onPieceUpdate.bind(this);
-
     this.handleRotation = this.handleRotation.bind(this);
     this.updatePieceState = this.updatePieceState.bind(this);
+    this.addNewPiece = this.addNewPiece.bind(this);
   }
 
   componentDidMount() {
@@ -209,6 +207,7 @@ class Game extends Component {
     const pieceCoordinates = piece ? this.calculatePieceCoordinates(piece, piecePos) : {};
     const { x, y } = this.boardDimensions;
     const height = window.innerHeight / (y + 3);
+
     const squares = board.map((row, rowIdx) => {
 
       return row.map((square, index) => {
@@ -256,7 +255,6 @@ class Game extends Component {
     return pieceGrid;
   }
 
-
   /**
    * Creates the values for creating a randomly selected Tetromino
    * @param  {Object} shapes Object of Tetrominos
@@ -272,6 +270,16 @@ class Game extends Component {
       rotation,
       currentPosition: rotation
     };
+  }
+
+  /**
+   * Adds a new piece at the origin
+   */
+  addNewPiece () {
+    const piece = this.generateRandomPiece(this.pieces);
+    piece.piecePos = { x: 3, y: 0 };
+
+    this.updatePieceState(piece);
   }
 
   /**
@@ -310,7 +318,6 @@ class Game extends Component {
     const pieceConfig = this.rotatePiece(direction, this.state.currentPosition);
     this.updatePieceState(pieceConfig);
   }
-
 
   /*****************************
   * On Screen Controls
@@ -359,6 +366,7 @@ class Game extends Component {
             { pieceSelect }
             <button onClick={ () => { this.handleRotation.call(this, 'right') } }>Rotate Right</button>
             <button onClick={ () => { this.handleRotation.call(this, 'left') } }>Rotate Left</button>
+            <button onClick={ this.addNewPiece }>New Piece</button>
           </div>
 
           <Tetromino fillClass='filled' shape={ this.currentShape } />
@@ -375,6 +383,5 @@ class Game extends Component {
 Game.contextTypes = {
   loop: PropTypes.object
 }
-
 
 export default Game;
