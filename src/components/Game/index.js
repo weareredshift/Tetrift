@@ -107,8 +107,14 @@ class Game extends Component {
       case 37:
         this.move({ x: -1, y: 0 });
         break;
+      case 38:
+        this.handleRotation.call(this, 'left');
+        break;
       case 39:
         this.move({ x: 1, y: 0 });
+        break;
+      case 40:
+        this.pieceFall();
         break;
       default:
         break;
