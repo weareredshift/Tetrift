@@ -29,6 +29,8 @@ class Game extends Component {
     };
 
     const initialState = this.generateRandomPiece(this.pieces);
+    this.pieceQueue = new Array(5).fill(null).map(() => this.generateRandomPiece(this.pieces));
+
     const { currentPosition, rotation, piece } = initialState;
 
     this.currentShape = this.generatePiece(this.pieces[piece][rotation]);
@@ -153,20 +155,7 @@ class Game extends Component {
       this.board[piece.y][piece.x] = 1;
     })
 
-    this.resetPiece();
-  }
-
-  resetPiece() {
-    const initialState = this.generateRandomPiece(this.pieces);
-    const { currentPosition, rotation, piece } = initialState;
-    this.currentShape = this.generatePiece(this.pieces[piece][rotation]);
-
-    this.setState({
-      piece,
-      piecePos: { x: 3, y: 0 },
-      currentPosition,
-      rotation
-    });
+    this.addNewPiece();
   }
 
   /*****************************
@@ -276,9 +265,9 @@ class Game extends Component {
    * Adds a new piece at the origin
    */
   addNewPiece () {
-    const piece = this.generateRandomPiece(this.pieces);
+    const piece = this.pieceQueue.pop();
+    this.pieceQueue.unshift(this.generateRandomPiece(this.pieces));
     piece.piecePos = { x: 3, y: 0 };
-
     this.updatePieceState(piece);
   }
 
