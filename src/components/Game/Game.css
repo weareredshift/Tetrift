@@ -11,7 +11,18 @@
 .board {
   margin: 0 auto;
   clear: both;
+  position: relative;
 }
+
+/*.board:before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: pink;
+}*/
 
 .block {
   border: 1px solid grey;
