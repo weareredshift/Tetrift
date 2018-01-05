@@ -46,7 +46,6 @@ class Game extends Component {
     this.handleStop = this.handleStop.bind(this);
     // this.onPieceUpdate = this.onPieceUpdate.bind(this);
 
-    this.boardDimensions = { x: 10, y: 20 };
     this.handleRotation = this.handleRotation.bind(this);
     this.updatePieceState = this.updatePieceState.bind(this);
   }
