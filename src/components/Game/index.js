@@ -114,7 +114,7 @@ class Game extends Component {
         this.move({ x: 1, y: 0 });
         break;
       case 40:
-        this.pieceFall();
+        this.move({x: 0, y: 1});
         break;
       default:
         break;
