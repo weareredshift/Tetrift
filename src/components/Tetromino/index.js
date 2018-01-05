@@ -23,7 +23,7 @@ const Tetronimo = ({ shape, fillClass }) => {
 
   return (
     <div className="tetromino">
-      <div className="piece">
+      <div className="piece cf">
         { renderedRows }
       </div>
     </div>
