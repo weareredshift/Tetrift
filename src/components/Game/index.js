@@ -45,7 +45,9 @@ class Game extends Component {
     this.boardDimensions = { x: 10, y: 20 };
     this.board = generateGameBoard(this.boardDimensions);
 
-    this.score = 0;
+    this.completedLines = 0;
+    this.level = 0;
+    this.gameSpeed = 50;
 
     this.state = {
       currentTime: 0,
@@ -113,11 +115,46 @@ class Game extends Component {
 
   // Tick logic subscribed from Loop component
   update = () => {
-    if (this.state.currentTime % 30 === 0) this.fallDown();
+    if (this.state.currentTime % this.gameSpeed === 0) this.fallDown();
     this.setState({
       currentTime: this.state.currentTime + 1
     });
   };
+
+  /**
+   * Calculates the current level from compelted lines
+   * @param  {Number} linesCleared Number of cleared lines
+   * @return {Number}              Level number
+   */
+  calculateLevel (linesCleared) {
+    let level = 0;
+
+    if (linesCleared <= 90) {
+      level = Math.floor(linesCleared / 10);
+    } else {
+      level = Math.floor((linesCleared - 90) / 20) + 9;
+    }
+    return level;
+  }
+
+  /**
+   * Caclulates the level speed from level number
+   * @param  {Number} levelNumber Level number
+   * @return {Number}             Game speed
+   */
+  calculateLevelSpeed(levelNumber) {
+    const levelSpeed = 50 - (levelNumber * 5);
+    return levelSpeed >= 1 ? levelSpeed : 1;
+  }
+
+  /**
+   * Updates to next level
+   * @param  {Nubmer} level Level number
+   */
+  triggerLevelChange (level) {
+    this.level = level;
+    this.gameSpeed = this.calculateLevelSpeed(level);
+  }
 
   move(dir) {
     const newPos = { x: this.state.piecePos.x + dir.x, y: this.state.piecePos.y + dir.y };
@@ -200,10 +237,15 @@ class Game extends Component {
 
     this.board.forEach((row, index) => {
       if (checkRowForCompletion(row) && index < this.board.length - 1) {
-        this.score ++;
+        this.completedLines ++;
         this.board = removeBoardRow(this.board, index);
       }
     });
+
+    const level = this.calculateLevel(this.completedLines);
+    if (this.level !== level && level < this.level) {
+      this.triggerLevelChange(level);
+    }
 
     this.assessNextTurn();
   }
@@ -298,6 +340,23 @@ class Game extends Component {
   /*****************************
   * On Screen Controls
   *****************************/
+  renderLevelSelect (levelNumber = 9) {
+    const options = [];
+    let i = 0;
+
+    while (i <= levelNumber) {
+      options.push(<option value={ i } key={ i }> { i } </option>);
+      i++;
+    }
+    return (
+      <select onChange={ (event) => {
+        this.triggerLevelChange(event.target.value);
+      } }
+      >
+        { options }
+      </select>
+    );
+  }
 
   /**
    * Renders a select box for swapping pieces
@@ -328,6 +387,7 @@ class Game extends Component {
     }
 
     const pieceSelect = this.renderPieceSelect(Object.keys(this.pieces));
+    const levelSelect = this.renderLevelSelect(9);
 
     return (
       <div className="game cf">
@@ -339,6 +399,7 @@ class Game extends Component {
           </div>
 
           <div className="controls">
+            { levelSelect }
             { pieceSelect }
             <button onClick={ () => { this.handleRotation.call(this, 'right'); } }>Rotate Right</button>
             <button onClick={ () => { this.handleRotation.call(this, 'left'); } }>Rotate Left</button>
@@ -346,7 +407,7 @@ class Game extends Component {
           </div>
         </div>
 
-        <div>Completed Rows { this.score }</div>
+        <div>Completed Rows { this.completedLines }  Level Number { this.level }</div>
         <div className="main">
           <div className="queue">
             <h5>Next piece</h5>
