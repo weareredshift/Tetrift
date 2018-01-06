@@ -49,7 +49,7 @@ class Game extends Component {
 
     this.state = {
       currentTime: 0,
-      piecePos: { x: 3, y: 0 },
+      piecePos: { x: 4, y: 0 },
       piece,
       currentPosition,
       rotation
@@ -104,7 +104,7 @@ class Game extends Component {
 
     this.setState({
       currentTime: 0,
-      piecePos: { x: 3, y: 0 },
+      piecePos: { x: 4, y: 0 },
       piece,
       currentPosition,
       rotation
