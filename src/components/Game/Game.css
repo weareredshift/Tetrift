@@ -15,7 +15,9 @@
   overflow: hidden;
   padding: 0 15px 15px;
   background: #222;
-  border-radius: 10px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
   box-sizing: content-box;
 }
 
@@ -38,14 +40,13 @@
 
 .main {
   position: relative;
+  display: flex;
+  align-items: flex-start;
 }
 
 .queue {
-  position: absolute;
-  right: -135px;
-  top: 0;
-  width: 150px;
-  padding: 15px;
+  width: auto;
+  padding: 15px 15px 15px 0;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   background: #222;
@@ -57,12 +58,6 @@
 
 .queue h5 {
   margin-bottom: 10px;
-}
-
-.queue .block {
-  width: 25%;
-  padding-bottom: calc(25% - 2px);
-  height: 0;
 }
 
 .audio {

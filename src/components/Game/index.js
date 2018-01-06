@@ -315,13 +315,13 @@ class Game extends Component {
 
         <div>Completed Rows { this.score }</div>
         <div className="main">
+          { board }
           <div className="queue">
-            <h5>Next piece</h5>
+            <h5>Next</h5>
             <div className="queue__piece">
-              <Tetromino fillClass={ `filled ${this.pieceQueue[this.pieceQueue.length - 1].piece}` } shape={ this.getNextPiece() } />
+              <Tetromino dimensions={ this.boardDimensions } fillClass={ `filled ${this.pieceQueue[this.pieceQueue.length - 1].piece}` } shape={ this.getNextPiece() } />
             </div>
           </div>
-          { board }
         </div>
         <div className="audio">
           <audio autoPlay controls>
