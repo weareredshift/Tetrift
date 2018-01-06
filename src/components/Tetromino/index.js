@@ -9,11 +9,17 @@ import { string, array } from 'prop-types';
 * @param  {Number} position     A number representing the current rotation for a piece
 * @return {Array}               An associative array, of DOM elements renderable by react
 */
-const Tetronimo = ({ shape, fillClass }) => {
+const Tetronimo = ({ shape, fillClass, dimensions }) => {
+  const { x, y } = dimensions;
+  const height = window.innerHeight / (y + 2);
+
   const renderedRows = shape.map((row, index) => {
     const rows = row.map((square, i) => {
       const filled = square ? `filled ${fillClass}` : 'empty';
-      return <div className={ `block ${filled}` } key={ i } />;
+      return <div
+        style={ { width: height, height } }
+        className={ `block ${filled}` } key={ i }
+      />;
     });
     return (
       <div className="row" key={ index }>
@@ -24,7 +30,7 @@ const Tetronimo = ({ shape, fillClass }) => {
 
   return (
     <div className="tetromino">
-      <div className="piece cf">
+      <div className="piece cf" style={ { width: height * 4 } }>
         { renderedRows }
       </div>
     </div>
