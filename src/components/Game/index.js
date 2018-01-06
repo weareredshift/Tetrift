@@ -49,7 +49,7 @@ class Game extends Component {
 
     this.state = {
       currentTime: 0,
-      piecePos: { x: 3, y: 0 },
+      piecePos: { x: 4, y: 0 },
       piece,
       currentPosition,
       rotation
@@ -84,6 +84,31 @@ class Game extends Component {
 
   handleStop () {
     window.cancelAnimationFrame(this.context.loop.loopID);
+  }
+
+  gameLost() {
+    return this.board[0].reduce((a, b) => a + b) > 2;
+  }
+
+  restartGame() {
+    const initialState = generateRandomPiece(this.pieces);
+    this.pieceQueue = new Array(5).fill(null).map(() => generateRandomPiece(this.pieces));
+
+    const { currentPosition, rotation, piece } = initialState;
+
+    this.currentShape = generatePiece(this.pieces[piece][rotation]);
+    this.boardDimensions = { x: 10, y: 20 };
+    this.board = generateGameBoard(this.boardDimensions);
+
+    this.score = 0;
+
+    this.setState({
+      currentTime: 0,
+      piecePos: { x: 4, y: 0 },
+      piece,
+      currentPosition,
+      rotation
+    });
   }
 
   // Tick logic subscribed from Loop component
@@ -155,6 +180,14 @@ class Game extends Component {
     return coordinates;
   }
 
+  assessNextTurn() {
+    if (this.gameLost()) {
+      this.restartGame();
+    } else {
+      this.addNewPiece();
+    }
+  }
+
   /**
    * Freezes a piece at the bottom or when bottom collision occurs
    */
@@ -172,7 +205,7 @@ class Game extends Component {
       }
     });
 
-    this.addNewPiece();
+    this.assessNextTurn();
   }
 
   /**
