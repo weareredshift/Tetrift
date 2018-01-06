@@ -243,7 +243,7 @@ class Game extends Component {
     });
 
     const level = this.calculateLevel(this.completedLines);
-    if (this.level !== level && level < this.level) {
+    if (this.level !== level && level > this.level) {
       this.triggerLevelChange(level);
     }
 
