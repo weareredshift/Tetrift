@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import WinnerScreen from '../WinnerScreen';
+import LoserScreen from '../LoserScreen';
+
 import {
   generateGameBoard,
   checkRowForCompletion,
   removeBoardRow,
   generatePiece,
-  generateRandomPiece
+  generateRandomPiece,
+  generateBoardRow,
+  caclulateTurnScore
 } from './gameUtils';
 
 import './Game.css';
@@ -37,26 +42,46 @@ class Game extends Component {
       sShape
     };
 
-    const initialState = generateRandomPiece(this.pieces);
+    const initialPieceState = generateRandomPiece(this.pieces);
     this.pieceQueue = new Array(5).fill(null).map(() => generateRandomPiece(this.pieces));
 
-    const { currentPosition, rotation, piece } = initialState;
+    const { currentPosition, rotation, piece } = initialPieceState;
 
     this.currentShape = generatePiece(this.pieces[piece][rotation]);
     this.boardDimensions = { x: 10, y: 20 };
     this.board = generateGameBoard(this.boardDimensions);
 
+    this.levelThemes = [
+      'sherbert',
+      'motherland',
+      'coldfront',
+      'desert',
+      'princess',
+      'chocolate',
+      'dinosaur',
+      'meat',
+      'rocketship',
+      'volcano'
+    ];
+
     this.completedLines = 0;
     this.level = 0;
     this.gameSpeed = 50;
+    this.flash = false;
 
-    this.state = {
+    this.initialState = {
       currentTime: 0,
+      currentScore: 0,
       piecePos: { x: 4, y: 0 },
       piece,
       currentPosition,
-      rotation
+      paused: false,
+      rotation,
+      showWinScreen: false,
+      showLoseScreen: false
     };
+
+    this.state = this.initialState;
 
     // Bind functions
     this.handleStart = this.handleStart.bind(this);
@@ -65,6 +90,7 @@ class Game extends Component {
     this.updatePieceState = this.updatePieceState.bind(this);
     this.addNewPiece = this.addNewPiece.bind(this);
     this.getNextPiece = this.getNextPiece.bind(this);
+    this.togglePause = this.togglePause.bind(this);
   }
 
   componentDidMount() {
@@ -87,34 +113,55 @@ class Game extends Component {
 
   handleStop () {
     window.cancelAnimationFrame(this.context.loop.loopID);
+    this.context.loop.loopID = null;
+  }
+
+  togglePause () {
+    this.setState({
+      paused: !this.state.paused
+    }, () => {
+      const updatePause = this.state.paused ? this.handleStop : this.handleStart;
+      updatePause();
+    });
   }
 
   gameLost() {
     return this.board[0].reduce((a, b) => a + b) > 2;
   }
 
+  endGame () {
+    this.handleStop();
+    if (this.state.currentScore >= 100000) {
+      this.setState({
+        showWinScreen: true
+      });
+    } else {
+      this.setState({
+        showLoseScreen: true
+      });
+    }
+  }
+
   restartGame() {
-    const initialState = generateRandomPiece(this.pieces);
+    const initialPieceState = generateRandomPiece(this.pieces);
     this.pieceQueue = new Array(5).fill(null).map(() => generateRandomPiece(this.pieces));
 
-    const { currentPosition, rotation, piece } = initialState;
+    const { rotation, piece } = initialPieceState;
 
     this.currentShape = generatePiece(this.pieces[piece][rotation]);
-    this.boardDimensions = { x: 10, y: 20 };
     this.board = generateGameBoard(this.boardDimensions);
 
     this.score = 0;
+    this.completedLines = 0;
+    this.level = 0;
+    this.gameSpeed = 50;
 
-    this.setState({
-      currentTime: 0,
-      piecePos: { x: 4, y: 0 },
-      piece,
-      currentPosition,
-      rotation
-    });
+    const state = Object.assign({}, this.initialState, initialPieceState);
+    this.setState(state, this.handleStart);
   }
 
   // Tick logic subscribed from Loop component
+  // tStamp is the hi-res timestamp from window.requestAnimationFrame
   update = () => {
     if (this.state.currentTime % this.gameSpeed === 0) this.fallDown();
     this.setState({
@@ -155,6 +202,13 @@ class Game extends Component {
   triggerLevelChange (level) {
     this.level = level;
     this.gameSpeed = this.calculateLevelSpeed(level);
+
+    clearTimeout(this.flashTimeout);
+
+    this.flash = true;
+    this.flashTimeout = setTimeout(() => {
+      this.flash = false;
+    }, 1000);
   }
 
   move(dir) {
@@ -220,7 +274,7 @@ class Game extends Component {
 
   assessNextTurn() {
     if (this.gameLost()) {
-      this.restartGame();
+      this.endGame();
     } else {
       this.addNewPiece();
     }
@@ -236,19 +290,45 @@ class Game extends Component {
       this.board[piece.y][piece.x] = tetrominoShapeNames.indexOf(this.state.piece) + 2;
     });
 
+    let lineCount = 0;
+    let rowsToRemove = [];
+
+    // Check for completed lines
     this.board.forEach((row, index) => {
       if (checkRowForCompletion(row) && index < this.board.length - 1) {
         this.completedLines ++;
-        this.board = removeBoardRow(this.board, index);
+        lineCount ++;
+        rowsToRemove.push(index);
       }
     });
 
+    // Update score if line complete
+    if (lineCount) {
+      this.removeRowsWithAnimation(rowsToRemove);
+      const currentScore = this.state.currentScore + caclulateTurnScore(this.level, lineCount);
+      this.setState({
+        currentScore
+      });
+    }
+
     const level = this.calculateLevel(this.completedLines);
+
     if (this.level !== level && level > this.level) {
       this.triggerLevelChange(level);
     }
 
     this.assessNextTurn();
+  }
+
+  removeRowsWithAnimation (rowIndexes = []) {
+    rowIndexes.forEach((rowIndex) => {
+      const row = generateBoardRow(this.boardDimensions.x + 2, -1);
+      this.board[rowIndex] = row;
+
+      setTimeout(() => {
+        this.board = removeBoardRow(this.board, rowIndex);
+      }, 75);
+    });
   }
 
   /**
@@ -391,12 +471,12 @@ class Game extends Component {
     const levelSelect = this.renderLevelSelect(9);
 
     return (
-      <div className="game cf">
+      <div className={ `game cf ${this.levelThemes[this.level]}` }>
         <div className="sidebar">
-          <button onClick={ this.handleStart }>Start</button>
-          <button onClick={ this.handleStop }>Stop</button>
+          <button onClick={ this.togglePause }> { this.state.paused ? 'Paused' : 'Pause' } </button>
           <div className="timer">
-            { this.state.currentTime }
+            Score: { this.state.currentScore } <br/>
+            Time: { this.state.currentTime }
           </div>
 
           <div className="controls">
@@ -411,6 +491,12 @@ class Game extends Component {
         <div>Completed Rows { this.completedLines }  Level Number { this.level }</div>
         <div className="main">
           { board }
+
+          { this.flash ?
+            <div className="flash-bang" />
+            : null
+          }
+
           <div className="queue">
             <h5>Next</h5>
             <div className="queue__piece">
@@ -423,6 +509,17 @@ class Game extends Component {
             <source src={ require('../../assets/music/tetris-gameboy-02.mp3') } type="audio/mpeg" />
           </audio>
         </div>
+
+        { this.state.showLoseScreen ?
+          <LoserScreen onRestart={ this.restartGame.bind(this) } />
+          : null
+        }
+
+        { this.state.showWinScreen ?
+          <WinnerScreen onRestart={ this.restartGame.bind(this) } />
+          : null
+        }
+
       </div>
     );
   }

@@ -1,7 +1,7 @@
 export default class GameLoop {
-  loop = () => {
+  loop = (tStamp) => {
     this.subscribers.forEach((callback) => {
-      callback.call();
+      callback.call(null, tStamp);
     });
 
     this.loopID = window.requestAnimationFrame(this.loop);

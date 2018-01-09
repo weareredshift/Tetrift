@@ -1,11 +1,12 @@
 .game {
   text-align: center;
-  max-width: 90vw;
+  padding: 0 40px;
   height: 100vh;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-around;
+  background-size: 297px;
 }
 
 .board {
@@ -19,6 +20,36 @@
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   box-sizing: content-box;
+}
+
+.flash-bang {
+  position: absolute;
+  margin: 0 auto;
+  clear: both;
+  overflow: hidden;
+  padding: 0 15px 15px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+
+  border-right: 15px solid #222;
+  border-left: 15px solid #222;
+  border-bottom: 15px solid #222;
+
+  pointer-events: none;
+  width: 71%;
+  height: 100%;
+  background: #fff;
+  opacity: 0;
+
+  animation: flash linear .15s;
+  animation-iteration-count: 2;
+}
+
+@keyframes flash {
+  0% { opacity: .65; }
+  50% { opacity: .1; }
+  100% { opacity: .65; }
 }
 
 .block {
@@ -65,3 +96,93 @@
   top: 0;
   left: 0;
 }
+
+.game.meat { background-image: url('../../assets/food.png'); }
+.game.meat .block.line { background-color: #AB4E2F; }
+.game.meat .block.square { background-color: #9E392B; }
+.game.meat .block.lShape { background-color: #872726; }
+.game.meat .block.jShape { background-color: #6A1D34; }
+.game.meat .block.tShape { background-color: #471530; }
+.game.meat .block.zShape { background-color: #BC6F55; }
+.game.meat .block.sShape { background-color: #3A0833; }
+
+.game.desert { background-image: url('../../assets/bright_squares_@2X.png'); }
+.game.desert .block.line { background-color: #A2264E; }
+.game.desert .block.square { background-color: #483D89; }
+.game.desert .block.lShape { background-color: #7A2D46; }
+.game.desert .block.jShape { background-color: #A7404E; }
+.game.desert .block.tShape { background-color: #B9535B; }
+.game.desert .block.zShape { background-color: #FCA63D; }
+.game.desert .block.sShape { background-color: #CF852B; }
+
+.game.princess { background-image: url('../../assets/bright_squares_@2X.png'); }
+.game.princess .block.line { background-color: #ED3D92; }
+.game.princess .block.square { background-color: #C83E81; }
+.game.princess .block.lShape { background-color: #D777A4; }
+.game.princess .block.jShape { background-color: #F1C4D9; }
+.game.princess .block.tShape { background-color: #9ED0D7; }
+.game.princess .block.zShape { background-color: #307079; }
+.game.princess .block.sShape { background-color: #E7D8C5; }
+
+.game.chocolate { background-image: url('../../assets/bright_squares_@2X.png'); }
+.game.chocolate .block.line { background-color: #EFD9CC; }
+.game.chocolate .block.square { background-color: #CF9371; }
+.game.chocolate .block.lShape { background-color: #E1B992; }
+.game.chocolate .block.jShape { background-color: #D6A77A; }
+.game.chocolate .block.tShape { background-color: #7A4A2A; }
+.game.chocolate .block.zShape { background-color: #906147; }
+.game.chocolate .block.sShape { background-color: #5B3014; }
+
+.game.dinosaur { background-image: url('../../assets/bright_squares_@2X.png'); }
+.game.dinosaur .block.line { background-color: #475D7A; }
+.game.dinosaur .block.square { background-color: #2C3D54; }
+.game.dinosaur .block.lShape { background-color: #2C5B61; }
+.game.dinosaur .block.jShape { background-color: #247065; }
+.game.dinosaur .block.tShape { background-color: #5FA65F; }
+.game.dinosaur .block.zShape { background-color: #FFEC97; }
+.game.dinosaur .block.sShape { background-color: #F9EFC0; }
+
+.game.coldfront { background-image: url('../../assets/bright_squares_@2X.png'); }
+.game.coldfront .block.line { background-color: #2B3D41; }
+.game.coldfront .block.square { background-color: #011D29; }
+.game.coldfront .block.lShape { background-color: #003440; }
+.game.coldfront .block.jShape { background-color: #246475; }
+.game.coldfront .block.tShape { background-color: #93B8C2; }
+.game.coldfront .block.zShape { background-color: #DBEFF5; }
+.game.coldfront .block.sShape { background-color: #F0F7F9; }
+
+.game.rocketship { background-image: url('../../assets/bright_squares_@2X.png'); }
+.game.rocketship .block.line { background-color: #6A7988; }
+.game.rocketship .block.square { background-color: #2D3E50; }
+.game.rocketship .block.lShape { background-color: #E74C3C; }
+.game.rocketship .block.jShape { background-color: #ECF0F1; }
+.game.rocketship .block.tShape { background-color: #3598DC; }
+.game.rocketship .block.zShape { background-color: #2A80B9; }
+.game.rocketship .block.sShape { background-color: #0E4C75; }
+
+.game.volcano { background-image: url('../../assets/bright_squares_@2X.png'); }
+.game.volcano .block.line { background-color: #979FA0; }
+.game.volcano .block.square { background-color: #292F30; }
+.game.volcano .block.lShape { background-color: #FADF4C; }
+.game.volcano .block.jShape { background-color: #F4B942; }
+.game.volcano .block.tShape { background-color: #FF7631; }
+.game.volcano .block.zShape { background-color: #ED6E42; }
+.game.volcano .block.sShape { background-color: #AB4714; }
+
+.game.sherbert { background-image: url('../../assets/bright_squares_@2X.png'); }
+.game.sherbert .block.line { background-color: #89E6E2; }
+.game.sherbert .block.square { background-color: #FF80AB; }
+.game.sherbert .block.lShape { background-color: #A980F5; }
+.game.sherbert .block.jShape { background-color: #65CBFF; }
+.game.sherbert .block.tShape { background-color: #5CE885; }
+.game.sherbert .block.zShape { background-color: #F5FF71; }
+.game.sherbert .block.sShape { background-color: #ED9074; }
+
+.game.motherland { background-image: url('../../assets/bright_squares_@2X.png'); }
+.game.motherland .block.line { background-color: #C2BEBE; }
+.game.motherland .block.square { background-color: #AE0219; }
+.game.motherland .block.lShape { background-color: #4A4A4A; }
+.game.motherland .block.jShape { background-color: #FFD61F; }
+.game.motherland .block.tShape { background-color: #117F9F; }
+.game.motherland .block.zShape { background-color: #FFFFFF; }
+.game.motherland .block.sShape { background-color: #244894; }

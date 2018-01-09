@@ -58,14 +58,15 @@ export const tetrominos = {
 };
 
 export const pieceColors = {
+  '-1': 'destroyed',
   1: 'border',
   2: 'line',
   3: 'square',
   4: 'lShape',
   5: 'jShape',
   6: 'tShape',
-  7: 'zShape',
-  8: 'sShape'
+  8: 'sShape',
+  7: 'zShape'
 };
 
 export const tetrominoShapeNames = Object.keys(tetrominos);
