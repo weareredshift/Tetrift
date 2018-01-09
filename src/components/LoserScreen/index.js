@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-
+import { func } from 'prop-types';
 
 class LoserScreen extends Component {
   constructor(props) {
@@ -8,7 +7,6 @@ class LoserScreen extends Component {
 
     this.state = {};
   }
-
 
   render () {
     return (
@@ -19,5 +17,9 @@ class LoserScreen extends Component {
     );
   }
 }
+
+LoserScreen.propTypes = {
+  onRestart: func
+};
 
 export default LoserScreen;

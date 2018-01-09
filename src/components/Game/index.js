@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { object } from 'prop-types';
 import WinnerScreen from '../WinnerScreen';
 import LoserScreen from '../LoserScreen';
 
@@ -475,7 +475,7 @@ class Game extends Component {
         <div className="sidebar">
           <button onClick={ this.togglePause }> { this.state.paused ? 'Paused' : 'Pause' } </button>
           <div className="timer">
-            Score: { this.state.currentScore } <br/>
+            Score: { this.state.currentScore } <br />
             Time: { this.state.currentTime }
           </div>
 
@@ -525,8 +525,8 @@ class Game extends Component {
   }
 }
 
-Game.contextTypes = {
-  loop: PropTypes.object
+Game.propTypes = {
+  loop: object
 };
 
 export default Game;

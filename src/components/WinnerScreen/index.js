@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-
+import { func } from 'prop-types';
 
 class WinnerScreen extends Component {
   constructor(props) {
@@ -8,7 +7,6 @@ class WinnerScreen extends Component {
 
     this.state = {};
   }
-
 
   render () {
     return (
@@ -19,5 +17,9 @@ class WinnerScreen extends Component {
     );
   }
 }
+
+WinnerScreen.propTypes = {
+  onRestart: func
+};
 
 export default WinnerScreen;
