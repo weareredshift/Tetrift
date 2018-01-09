@@ -1,10 +1,30 @@
+@font-face {
+    font-family: '8bit_wonder';
+    src: url('./assets/fonts/8-bit_wonder.woff2') format('woff2'),
+         url('./assets/fonts/8-bit_wonder.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 .app {
   text-align: center;
+  font-family: '8bit_wonder', sans-serif;
+  text-transform: uppercase;
 }
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
+}
+
+a {
+  text-decoration: none;
+  color: #FF2953;
+}
+
+a:hover {
+  color: #888;
 }
 
 .App-header {

@@ -1,0 +1,52 @@
+/* classic theme */
+.style--classic {
+  font-family: '8bit_wonder', sans-serif;
+}
+
+
+/* modern theme */
+.style--modern {
+  font-family: sans-serif;
+}
+
+.style--modern .block.filled {
+  box-shadow: inset 0 2px 1px 0px rgba(255,255,255,0.2), inset 0 -2px 1px 0 rgba(0,0,0,0.15);
+}
+
+
+/* redshift theme */
+.style--redshift {
+  font-family: 'Avenir-Black', sans-serif;
+}
+
+.style--redshift .block.filled {
+  border-radius: 50%;
+  box-shadow: inset 0 2px 1px 0px rgba(255,255,255,0.2), inset 0 -2px 1px 0 rgba(0,0,0,0.15);
+}
+
+
+/* 3d theme */
+.style--3d .main {
+  perspective: 1000px;
+}
+
+.style--3d .main .block.filled {
+  background: none;
+}
+
+.style--3d .main .block.filled > div {
+  transform-style: preserve-3d;
+  transform: translateZ( 10px );
+}
+
+.style--3d .main .block.filled > div > div {
+  border: 1px solid black;
+  background-color: white;
+}
+
+.style--3d .main .block.filled .front { transform: rotateY(   0deg ) translateZ( 100px ); }
+.style--3d .main .block.filled .back { transform: rotateX( 180deg ) translateZ( 100px ); }
+.style--3d .main .block.filled .right { transform: rotateY(  90deg ) translateZ( 100px ); }
+.style--3d .main .block.filled .left { transform: rotateY( -90deg ) translateZ( 100px ); }
+.style--3d .main .block.filled .top { transform: rotateX(  90deg ) translateZ( 100px ); }
+.style--3d .main .block.filled .bottom { transform: rotateX( -90deg ) translateZ( 100px ); }

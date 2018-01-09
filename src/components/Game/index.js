@@ -14,6 +14,7 @@ import {
 } from './gameUtils';
 
 import './Game.css';
+import './themes.css';
 import {
   line,
   square,
@@ -65,8 +66,8 @@ class Game extends Component {
     ];
 
     this.completedLines = 0;
-    this.level = 0;
-    this.gameSpeed = 50;
+    this.level = props.options.difficulty;
+    this.gameSpeed = this.calculateLevelSpeed(this.level);
     this.flash = false;
 
     this.initialState = {
@@ -349,7 +350,20 @@ class Game extends Component {
         fillClass = `filled ${pieceColors[square]}`;
       }
       if (pieceCoordinates[[index, rowIdx]]) fillClass = `filled ${this.state.piece}`;
-      return <div key={ index } style={ { height, width: height } } className={ `block ${fillClass}` } />;
+      return (
+        <div key={ index } style={ { height, width: height } } className={ `block ${fillClass}` }>
+          { this.props.options.style === '3d' && fillClass.split(' ')[0] === 'filled' &&
+            <div>
+              <div className="front" />
+              <div className="back" />
+              <div className="right" />
+              <div className="left" />
+              <div className="top" />
+              <div className="bottom" />
+            </div>
+          }
+        </div>
+      );
     }));
 
     return (
@@ -462,33 +476,22 @@ class Game extends Component {
 
   render() {
     let board = null;
+    const { options } = this.props;
 
     if (this.board) {
       board = this.renderGameBoard(this.board, this.currentShape, this.state.piecePos);
     }
 
-    const pieceSelect = this.renderPieceSelect(Object.keys(this.pieces));
-    const levelSelect = this.renderLevelSelect(9);
-
     return (
-      <div className={ `game cf ${this.levelThemes[this.level]}` }>
+      <div className={ `game cf ${this.levelThemes[this.level]} style--${options.style}` }>
         <div className="sidebar">
-          <button onClick={ this.togglePause }> { this.state.paused ? 'Paused' : 'Pause' } </button>
           <div className="timer">
             Score: { this.state.currentScore } <br />
             Time: { this.state.currentTime }
           </div>
-
-          <div className="controls">
-            { levelSelect }
-            { pieceSelect }
-            <button onClick={ () => { this.handleRotation.call(this, 'right'); } }>Rotate Right</button>
-            <button onClick={ () => { this.handleRotation.call(this, 'left'); } }>Rotate Left</button>
-            <button onClick={ this.addNewPiece }>New Piece</button>
-          </div>
         </div>
 
-        <div>Completed Rows { this.completedLines }  Level Number { this.level }</div>
+        <div>Completed Rows { this.completedLines }  Level { this.level + 1 }</div>
         <div className="main">
           { board }
 
@@ -496,6 +499,7 @@ class Game extends Component {
             <div className="flash-bang" />
             : null
           }
+          { this.flash && <div className="flash-bang" /> }
 
           <div className="queue">
             <h5>Next</h5>
@@ -503,11 +507,6 @@ class Game extends Component {
               <Tetromino dimensions={ this.boardDimensions } fillClass={ `filled ${this.pieceQueue[this.pieceQueue.length - 1].piece}` } shape={ this.getNextPiece() } />
             </div>
           </div>
-        </div>
-        <div className="audio">
-          <audio autoPlay controls>
-            <source src={ require('../../assets/music/tetris-gameboy-02.mp3') } type="audio/mpeg" />
-          </audio>
         </div>
 
         { this.state.showLoseScreen ?
@@ -520,6 +519,13 @@ class Game extends Component {
           : null
         }
 
+        { options.sound === 'yes' &&
+          <div className="audio">
+            <audio autoPlay={ true } controls={ true }>
+              <source src={ require('../../assets/music/tetris-gameboy-02.mp3') } type="audio/mpeg" />
+            </audio>
+          </div>
+        }
       </div>
     );
   }
