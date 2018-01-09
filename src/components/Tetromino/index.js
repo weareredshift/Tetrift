@@ -10,7 +10,7 @@ import { string, array } from 'prop-types';
 * @return {Array}               An associative array, of DOM elements renderable by react
 */
 const Tetronimo = ({ shape, fillClass, dimensions }) => {
-  const { x, y } = dimensions;
+  const { y } = dimensions;
   const height = window.innerHeight / (y + 2);
 
   const renderedRows = shape.map((row, index) => {

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-
+import { func } from 'prop-types';
+import './Loser.css';
+import HighScoreList from '../HighScore/highScoreList';
+import HighScoreForm from '../HighScore/highScoreForm';
 
 class LoserScreen extends Component {
   constructor(props) {
@@ -9,15 +11,22 @@ class LoserScreen extends Component {
     this.state = {};
   }
 
-
   render () {
+    const { score } = this.props;
+
     return (
-      <div>
+      <div className="loser">
+        <HighScoreList />
+        <HighScoreForm score={ score } callback={ (response) => console.log(response) } />
         <h1>You Lose</h1>
-        <button onClick={ this.props.onRestart }>Restart</button>
+        <span className="btn" onClick={ this.props.onRestart }>Restart</span>
       </div>
     );
   }
 }
+
+LoserScreen.propTypes = {
+  onRestart: func
+};
 
 export default LoserScreen;
