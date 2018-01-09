@@ -511,7 +511,7 @@ class Game extends Component {
         </div>
 
         { this.state.showLoseScreen ?
-          <LoserScreen onRestart={ this.restartGame.bind(this) } />
+          <LoserScreen score={ this.state.currentScore } onRestart={ this.restartGame.bind(this) } />
           : null
         }
 

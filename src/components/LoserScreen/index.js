@@ -12,10 +12,12 @@ class LoserScreen extends Component {
   }
 
   render () {
+    const { score } = this.props;
+
     return (
       <div className="loser">
         <HighScoreList />
-        <HighScoreForm score={ 123 } callback={ (response) => console.log(response) } />
+        <HighScoreForm score={ score } callback={ (response) => console.log(response) } />
         <h1>You Lose</h1>
         <span className="btn" onClick={ this.props.onRestart }>Restart</span>
       </div>
