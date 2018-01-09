@@ -525,7 +525,7 @@ class Game extends Component {
   }
 }
 
-Game.propTypes = {
+Game.contextTypes = {
   loop: object
 };
 

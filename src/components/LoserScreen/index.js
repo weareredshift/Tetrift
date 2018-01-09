@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
+import './Loser.css';
 
 class LoserScreen extends Component {
   constructor(props) {
@@ -10,9 +11,9 @@ class LoserScreen extends Component {
 
   render () {
     return (
-      <div>
+      <div className="loser">
         <h1>You Lose</h1>
-        <button onClick={ this.props.onRestart }>Restart</button>
+        <span className="btn" onClick={ this.props.onRestart }>Restart</span>
       </div>
     );
   }
