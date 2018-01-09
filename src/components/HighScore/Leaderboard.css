@@ -1,0 +1,4 @@
+.leaderboard li {
+  display: flex;
+  align-items: center;
+}

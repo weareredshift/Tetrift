@@ -1,5 +1,6 @@
 import React from 'react';
 import { getHighScores } from '../../utils/api';
+import './Leaderboard.css';
 
 class HighScoreList extends React.Component {
   constructor() {
@@ -17,15 +18,15 @@ class HighScoreList extends React.Component {
   render() {
     const { scores } = this.state;
     return (
-      <div>
+      <ul className="leaderboard">
         {scores.map((score, index) => (
-          <div key={ index }>
+          <li key={ index }>
             <p>{index + 1}</p>
             <p>{score.name}</p>
             <p>{score.score}</p>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     );
   }
 }
