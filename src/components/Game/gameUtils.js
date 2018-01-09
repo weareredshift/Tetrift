@@ -4,8 +4,8 @@ import { getRandomInt } from '../../utils/utils';
 * Game Board Setup
 *****************************/
 
-export function generateBoardRow (width) {
-  const row = new Array(width).fill(0);
+export function generateBoardRow (width, fill = 0) {
+  const row = new Array(width).fill(fill);
   row[0] = 1;
   row[row.length - 1] = 1;
   return row;

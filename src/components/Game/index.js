@@ -6,6 +6,7 @@ import {
   removeBoardRow,
   generatePiece,
   generateRandomPiece,
+  generateBoardRow,
   caclulateTurnScore
 } from './gameUtils';
 
@@ -239,19 +240,22 @@ class Game extends Component {
     });
 
     let lineCount = 0;
+    let rowsToRemove = [];
 
+    // Check for completed lines
     this.board.forEach((row, index) => {
       if (checkRowForCompletion(row) && index < this.board.length - 1) {
         this.completedLines ++;
         lineCount ++;
-        this.board = removeBoardRow(this.board, index);
+        rowsToRemove.push(index);
       }
     });
 
     // Update score if line complete
     if (lineCount) {
+      this.removeRowsWithAnimation(rowsToRemove);
       const currentScore = this.state.currentScore + caclulateTurnScore(this.level, lineCount);
-       this.setState({
+      this.setState({
         currentScore
       });
     }
@@ -263,6 +267,17 @@ class Game extends Component {
     }
 
     this.assessNextTurn();
+  }
+
+  removeRowsWithAnimation (rowIndexes = []) {
+    rowIndexes.forEach((rowIndex) => {
+      const row = generateBoardRow(this.boardDimensions.x + 2, -1);
+      this.board[rowIndex] = row;
+
+      setTimeout(() => {
+        this.board = removeBoardRow(this.board, rowIndex);
+      }, 75);
+    });
   }
 
   /**
