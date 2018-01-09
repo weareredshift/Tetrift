@@ -27,6 +27,7 @@ import {
 } from '../Tetromino/tetrominoShapes';
 
 import Tetromino from '../Tetromino';
+
 class Game extends Component {
   constructor(props) {
     super(props);
