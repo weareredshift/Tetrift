@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { object } from 'prop-types';
 import WinnerScreen from '../WinnerScreen';
 import LoserScreen from '../LoserScreen';
 
@@ -525,8 +525,8 @@ class Game extends Component {
   }
 }
 
-Game.contextTypes = {
-  loop: PropTypes.object
+Game.propTypes = {
+  loop: object
 };
 
 export default Game;
