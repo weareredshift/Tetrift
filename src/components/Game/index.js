@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import WinnerScreen from '../WinnerScreen';
+import LoserScreen from '../LoserScreen';
+
 import {
   generateGameBoard,
   checkRowForCompletion,
@@ -38,10 +41,10 @@ class Game extends Component {
       sShape
     };
 
-    const initialState = generateRandomPiece(this.pieces);
+    const initialPieceState = generateRandomPiece(this.pieces);
     this.pieceQueue = new Array(5).fill(null).map(() => generateRandomPiece(this.pieces));
 
-    const { currentPosition, rotation, piece } = initialState;
+    const { currentPosition, rotation, piece } = initialPieceState;
 
     this.currentShape = generatePiece(this.pieces[piece][rotation]);
     this.boardDimensions = { x: 10, y: 20 };
@@ -65,14 +68,19 @@ class Game extends Component {
     this.gameSpeed = 50;
     this.flash = false;
 
-    this.state = {
+    this.initialState = {
       currentTime: 0,
       currentScore: 0,
       piecePos: { x: 4, y: 0 },
       piece,
       currentPosition,
-      rotation
+      paused: false,
+      rotation,
+      showWinScreen: false,
+      showLoseScreen: false
     };
+
+    this.state = this.initialState;
 
     // Bind functions
     this.handleStart = this.handleStart.bind(this);
@@ -81,6 +89,7 @@ class Game extends Component {
     this.updatePieceState = this.updatePieceState.bind(this);
     this.addNewPiece = this.addNewPiece.bind(this);
     this.getNextPiece = this.getNextPiece.bind(this);
+    this.togglePause = this.togglePause.bind(this);
   }
 
   componentDidMount() {
@@ -103,6 +112,16 @@ class Game extends Component {
 
   handleStop () {
     window.cancelAnimationFrame(this.context.loop.loopID);
+    this.context.loop.loopID = null;
+  }
+
+  togglePause () {
+    this.setState({
+      paused: !this.state.paused
+    }, () => {
+      const updatePause = this.state.paused ? this.handleStop : this.handleStart;
+      updatePause();
+    });
   }
 
   gameLost() {
@@ -110,14 +129,23 @@ class Game extends Component {
   }
 
   endGame () {
-    this.restartGame();
+    this.handleStop();
+    if (this.state.currentScore >= 100000) {
+      this.setState({
+        showWinScreen: true
+      });
+    } else {
+      this.setState({
+        showLoseScreen: true
+      });
+    }
   }
 
   restartGame() {
-    const initialState = generateRandomPiece(this.pieces);
+    const initialPieceState = generateRandomPiece(this.pieces);
     this.pieceQueue = new Array(5).fill(null).map(() => generateRandomPiece(this.pieces));
 
-    const { currentPosition, rotation, piece } = initialState;
+    const { rotation, piece } = initialPieceState;
 
     this.currentShape = generatePiece(this.pieces[piece][rotation]);
     this.board = generateGameBoard(this.boardDimensions);
@@ -127,19 +155,13 @@ class Game extends Component {
     this.level = 0;
     this.gameSpeed = 50;
 
-    this.setState({
-      currentTime: 0,
-      currentScore: 0,
-      piecePos: { x: 4, y: 0 },
-      piece,
-      currentPosition,
-      rotation
-    });
+    const state = Object.assign({}, this.initialState, initialPieceState);
+    this.setState(state, this.handleStart);
   }
 
   // Tick logic subscribed from Loop component
-  update = (tStamp) => {
-    // console.log(tStamp);
+  // tStamp is the hi-res timestamp from window.requestAnimationFrame
+  update = () => {
     if (this.state.currentTime % this.gameSpeed === 0) this.fallDown();
     this.setState({
       currentTime: this.state.currentTime + 1
@@ -450,8 +472,7 @@ class Game extends Component {
     return (
       <div className={ `game cf ${this.levelThemes[this.level]}` }>
         <div className="sidebar">
-          <button onClick={ this.handleStart }>Start</button>
-          <button onClick={ this.handleStop }>Stop</button>
+          <button onClick={ this.togglePause }> { this.state.paused ? 'Paused' : 'Pause' } </button>
           <div className="timer">
             Score: { this.state.currentScore } <br/>
             Time: { this.state.currentTime }
@@ -472,7 +493,8 @@ class Game extends Component {
 
           { this.flash ?
             <div className="flash-bang" />
-          : null }
+            : null
+          }
 
           <div className="queue">
             <h5>Next</h5>
@@ -486,6 +508,17 @@ class Game extends Component {
             <source src={ require('../../assets/music/tetris-gameboy-02.mp3') } type="audio/mpeg" />
           </audio>
         </div>
+
+        { this.state.showLoseScreen ?
+          <LoserScreen onRestart={ this.restartGame.bind(this) } />
+          : null
+        }
+
+        { this.state.showWinScreen ?
+          <WinnerScreen onRestart={ this.restartGame.bind(this) } />
+          : null
+        }
+
       </div>
     );
   }
