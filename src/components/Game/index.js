@@ -48,16 +48,16 @@ class Game extends Component {
     this.board = generateGameBoard(this.boardDimensions);
 
     this.levels = [
-      'meat',
+      'sherbert',
+      'motherland',
       'coldfront',
       'desert',
       'princess',
       'chocolate',
       'dinosaur',
+      'meat',
       'rocketship',
-      'volcano',
-      'sherbert',
-      'motherland'
+      'volcano'
     ];
 
     this.completedLines = 0;
