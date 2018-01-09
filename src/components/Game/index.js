@@ -50,6 +50,7 @@ class Game extends Component {
     this.completedLines = 0;
     this.level = 0;
     this.gameSpeed = 50;
+    this.flash = false;
 
     this.state = {
       currentTime: 0,
@@ -158,6 +159,13 @@ class Game extends Component {
   triggerLevelChange (level) {
     this.level = level;
     this.gameSpeed = this.calculateLevelSpeed(level);
+
+    clearTimeout(this.flashTimeout);
+
+    this.flash = true;
+    this.flashTimeout = setTimeout(() => {
+      this.flash = false;
+    }, 1000);
   }
 
   move(dir) {
@@ -441,6 +449,11 @@ class Game extends Component {
         <div>Completed Rows { this.completedLines }  Level Number { this.level }</div>
         <div className="main">
           { board }
+
+          { this.flash ?
+            <div className="flash-bang" />
+          : null }
+
           <div className="queue">
             <h5>Next</h5>
             <div className="queue__piece">
