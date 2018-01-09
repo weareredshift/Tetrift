@@ -481,14 +481,11 @@ class Game extends Component {
       board = this.renderGameBoard(this.board, this.currentShape, this.state.piecePos);
     }
 
-    // const pieceSelect = this.renderPieceSelect(Object.keys(this.pieces));
-    // const levelSelect = this.renderLevelSelect(9);
-
     return (
       <div className={ `game cf ${this.levelThemes[this.level]} style--${options.style}` }>
         <div className="sidebar">
           <div className="timer">
-            Score: { this.state.currentScore } <br/>
+            Score: { this.state.currentScore } <br />
             Time: { this.state.currentTime }
           </div>
         </div>
@@ -501,6 +498,7 @@ class Game extends Component {
             <div className="flash-bang" />
             : null
           }
+          { this.flash && <div className="flash-bang" /> }
 
           <div className="queue">
             <h5>Next</h5>
@@ -508,11 +506,6 @@ class Game extends Component {
               <Tetromino dimensions={ this.boardDimensions } fillClass={ `filled ${this.pieceQueue[this.pieceQueue.length - 1].piece}` } shape={ this.getNextPiece() } />
             </div>
           </div>
-        </div>
-        <div className="audio">
-          <audio autoPlay controls>
-            <source src={ require('../../assets/music/tetris-gameboy-02.mp3') } type="audio/mpeg" />
-          </audio>
         </div>
 
         { this.state.showLoseScreen ?
@@ -525,6 +518,13 @@ class Game extends Component {
           : null
         }
 
+        { options.sound === 'yes' &&
+          <div className="audio">
+            <audio autoPlay={ true } controls={ true }>
+              <source src={ require('../../assets/music/tetris-gameboy-02.mp3') } type="audio/mpeg" />
+            </audio>
+          </div>
+        }
       </div>
     );
   }

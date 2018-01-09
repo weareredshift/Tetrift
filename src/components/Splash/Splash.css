@@ -7,6 +7,11 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  position: relative;
+}
+
+.splash > div {
+  margin-bottom: 3rem;
 }
 
 .btn {
@@ -24,7 +29,7 @@
 
 .title {
   font-size: 80px;
-  margin-bottom: 3rem;
+  margin-bottom: 5rem;
 }
 
 .header {
@@ -48,4 +53,9 @@
 
 .options li.selected {
   color: #FF2953;
+}
+
+.footer {
+  position: absolute;
+  bottom: 3rem;
 }

@@ -14,14 +14,15 @@ class App extends Component {
       startGame: false,
       options: {
         style: 'classic',
-        difficulty: 0
+        difficulty: 0,
+        sound: 'yes'
       }
-    }
+    };
   }
 
   setOption (newOption) {
     const { options } = this.state;
-    this.setState({ options: Object.assign(options, newOption) })
+    this.setState({ options: Object.assign(options, newOption) });
   }
 
   render () {
@@ -33,10 +34,10 @@ class App extends Component {
           { startGame
             ? <Game options={ options } />
             : <Splash
-                activeOptions={ options }
-                setOption={ (option) => this.setOption(option) }
-                onGameStart={ () => this.setState({ startGame: true }) }
-              />
+              activeOptions={ options }
+              setOption={ (option) => this.setOption(option) }
+              onGameStart={ () => this.setState({ startGame: true }) }
+            />
           }
         </Loop>
       </div>

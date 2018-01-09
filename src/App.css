@@ -18,6 +18,15 @@
   height: 80px;
 }
 
+a {
+  text-decoration: none;
+  color: #FF2953;
+}
+
+a:hover {
+  color: #888;
+}
+
 .App-header {
   background-color: #222;
   height: 150px;
