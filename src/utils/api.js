@@ -10,7 +10,7 @@ export const getHighScores = (game) => (
   })
 );
 
-export const saveHighScore = (game, name, score) => {
+export const saveHighScore = (game, name, score) => (
   invokeApig({
     path: '/highscores',
     method: 'POST',
@@ -19,5 +19,5 @@ export const saveHighScore = (game, name, score) => {
       name: name,
       score: score
     }
-  });
-};
+  })
+);

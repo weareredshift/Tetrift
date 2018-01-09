@@ -20,6 +20,7 @@ class HighScoreList extends React.Component {
       <div>
         {scores.map((score, index) => (
           <div key={ index }>
+            <p>{index + 1}</p>
             <p>{score.name}</p>
             <p>{score.score}</p>
           </div>
