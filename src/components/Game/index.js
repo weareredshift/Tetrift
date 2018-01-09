@@ -5,7 +5,8 @@ import {
   checkRowForCompletion,
   removeBoardRow,
   generatePiece,
-  generateRandomPiece
+  generateRandomPiece,
+  caclulateTurnScore
 } from './gameUtils';
 
 import './Game.css';
@@ -51,6 +52,7 @@ class Game extends Component {
 
     this.state = {
       currentTime: 0,
+      currentScore: 0,
       piecePos: { x: 4, y: 0 },
       piece,
       currentPosition,
@@ -235,14 +237,26 @@ class Game extends Component {
       this.board[piece.y][piece.x] = tetrominoShapeNames.indexOf(this.state.piece) + 2;
     });
 
+    let lineCount = 0;
+
     this.board.forEach((row, index) => {
       if (checkRowForCompletion(row) && index < this.board.length - 1) {
         this.completedLines ++;
+        lineCount ++;
         this.board = removeBoardRow(this.board, index);
       }
     });
 
+    // Update score if line complete
+    if (lineCount) {
+      const currentScore = this.state.currentScore + caclulateTurnScore(this.level, lineCount);
+       this.setState({
+        currentScore
+      });
+    }
+
     const level = this.calculateLevel(this.completedLines);
+
     if (this.level !== level && level > this.level) {
       this.triggerLevelChange(level);
     }
@@ -395,7 +409,8 @@ class Game extends Component {
           <button onClick={ this.handleStart }>Start</button>
           <button onClick={ this.handleStop }>Stop</button>
           <div className="timer">
-            { this.state.currentTime }
+            Score: { this.state.currentScore } <br/>
+            Time: { this.state.currentTime }
           </div>
 
           <div className="controls">
