@@ -4,13 +4,40 @@ import './App.css';
 
 import Loop from './components/Loop';
 import Game from './components/Game';
+import Splash from './components/Splash';
 
 class App extends Component {
-  render() {
+  constructor (props) {
+    super(props);
+
+    this.state = {
+      startGame: false,
+      options: {
+        style: 'classic',
+        difficulty: 0
+      }
+    }
+  }
+
+  setOption (newOption) {
+    const { options } = this.state;
+    this.setState({ options: Object.assign(options, newOption) })
+  }
+
+  render () {
+    const { startGame, options } = this.state;
+
     return (
       <div className="app">
         <Loop>
-          <Game />
+          { startGame
+            ? <Game options={ options } />
+            : <Splash
+                activeOptions={ options }
+                setOption={ (option) => this.setOption(option) }
+                onGameStart={ () => this.setState({ startGame: true }) }
+              />
+          }
         </Loop>
       </div>
     );

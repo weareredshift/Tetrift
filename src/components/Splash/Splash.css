@@ -1,0 +1,51 @@
+.splash {
+  width: 100vw;
+  height: 100vh;
+  background: black;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.btn {
+  background: white;
+  padding: 15px 25px;
+  color: black;
+  cursor: pointer;
+  border: 3px solid white;
+}
+
+.btn:hover {
+  background: transparent;
+  color: white;
+}
+
+.title {
+  font-size: 80px;
+  margin-bottom: 3rem;
+}
+
+.header {
+  margin-bottom: 10px;
+}
+
+.options {
+  margin-bottom: 40px;
+}
+
+.options li {
+  display: inline-block;
+  margin: 0 1rem;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.options li:hover {
+  color: #aaa;
+}
+
+.options li.selected {
+  color: #FF2953;
+}
