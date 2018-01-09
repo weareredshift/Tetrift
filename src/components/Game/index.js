@@ -47,6 +47,19 @@ class Game extends Component {
     this.boardDimensions = { x: 10, y: 20 };
     this.board = generateGameBoard(this.boardDimensions);
 
+    this.levels = [
+      'meat',
+      'coldfront',
+      'desert',
+      'princess',
+      'chocolate',
+      'dinosaur',
+      'rocketship',
+      'volcano',
+      'sherbert',
+      'motherland'
+    ];
+
     this.completedLines = 0;
     this.level = 0;
     this.gameSpeed = 50;
@@ -428,7 +441,7 @@ class Game extends Component {
     const levelSelect = this.renderLevelSelect(9);
 
     return (
-      <div className="game cf">
+      <div className={ `game cf ${this.levels[this.level]}` }>
         <div className="sidebar">
           <button onClick={ this.handleStart }>Start</button>
           <button onClick={ this.handleStop }>Stop</button>
