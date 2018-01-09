@@ -95,3 +95,11 @@ export function generateRandomPiece (shapes) {
   };
 }
 
+/*****************************
+* Score Calculation
+*****************************/
+export function caclulateTurnScore (level, completedLines) {
+  const multiplier = [40, 100, 300, 1200];
+  return (level + 1) * multiplier[completedLines - 1];
+}
+
