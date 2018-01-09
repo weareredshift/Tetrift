@@ -47,7 +47,7 @@ class Game extends Component {
     this.boardDimensions = { x: 10, y: 20 };
     this.board = generateGameBoard(this.boardDimensions);
 
-    this.levels = [
+    this.levelThemes = [
       'sherbert',
       'motherland',
       'coldfront',
@@ -441,7 +441,7 @@ class Game extends Component {
     const levelSelect = this.renderLevelSelect(9);
 
     return (
-      <div className={ `game cf ${this.levels[this.level]}` }>
+      <div className={ `game cf ${this.levelThemes[this.level]}` }>
         <div className="sidebar">
           <button onClick={ this.handleStart }>Start</button>
           <button onClick={ this.handleStop }>Stop</button>
