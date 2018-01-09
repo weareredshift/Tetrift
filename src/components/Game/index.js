@@ -108,6 +108,7 @@ class Game extends Component {
 
     this.setState({
       currentTime: 0,
+      currentScore: 0,
       piecePos: { x: 4, y: 0 },
       piece,
       currentPosition,
