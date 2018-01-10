@@ -27,7 +27,7 @@ class LoserScreen extends Component {
         { scoreSubmitted
           ? <div>
             <HighScoreList userTimestamp={ userTimestamp } />
-            <span className="btn" style={ { margin: '0 20px' } }>Play again</span>
+            <span className="btn" onClick={ this.props.onRestart } style={ { margin: '0 20px' } }>Play again</span>
             <span className="btn" style={ { margin: '0 20px' } }>Main menu</span>
           </div>
           : <HighScoreForm
