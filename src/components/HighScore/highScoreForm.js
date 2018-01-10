@@ -22,7 +22,7 @@ class HighScoreForm extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const { name } = this.state;
-    const { score, callback } = this.props;
+    const { score, callback, submitForm } = this.props;
     saveHighScore('tetrift', name, score)
       .then(response => callback(response));
   }
@@ -30,8 +30,8 @@ class HighScoreForm extends React.Component {
   render() {
     return (
       <form onSubmit={ this.handleSubmit }>
-        <input type="text" value={ this.state.name } onChange={ this.handleChange } />
-        <button type="submit">
+        <input placeholder="Enter your name" type="text" value={ this.state.name } onChange={ this.handleChange } />
+        <button className="btn" type="submit">
           Submit
         </button>
       </form>

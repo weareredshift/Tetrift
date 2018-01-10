@@ -48,22 +48,3 @@
   text-align: center;
   margin: 2rem auto;
 }
-
-.controls {
-  width: 100%;
-}
-
-button {
-  display: block;
-  float: left;
-  padding: .5rem;
-  width: 40%;
-  margin: 1rem 5%;
-}
-
-select {
-  display: block;
-  height: 2rem;
-  width: 100%;
-  margin: .5rem auto;
-}
