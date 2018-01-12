@@ -15,3 +15,22 @@
 .loser .title {
   margin-bottom: 1.5rem;
 }
+
+.submit__wrapper {
+  position: relative;
+  width: 364px;
+}
+
+.submit__wrapper .btn {
+  width: 100%;
+}
+
+.error {
+  position: absolute;
+  color: red;
+  font-size: 12px;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+}
