@@ -484,15 +484,18 @@ class Game extends Component {
 
     return (
       <div className={ `game cf ${this.levelThemes[this.level]} style--${options.style}` }>
-        <div className="sidebar">
+        <div className="header">
           <div className="timer">
-            Score: { this.state.currentScore } <br />
-            Time: { this.state.currentTime }
+            <span style={ { margin: '10px 20px' } }>Score: { this.state.currentScore }</span>
+            <span style={ { margin: '10px 20px' } }>Time: { this.state.currentTime }</span>
           </div>
         </div>
 
-        <div>Completed Rows { this.completedLines }  Level { this.level + 1 }</div>
         <div className="main">
+          <div className="status">
+            <span>Rows { this.completedLines }</span>
+            <span>Level { this.level + 1 }</span>
+          </div>
           { board }
 
           { this.flash ?
