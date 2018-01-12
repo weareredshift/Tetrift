@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { object } from 'prop-types';
+import { object, func } from 'prop-types';
 import WinnerScreen from '../WinnerScreen';
 import LoserScreen from '../LoserScreen';
 
@@ -95,13 +95,15 @@ class Game extends Component {
   }
 
   componentDidMount() {
+    this.keydownFunc = this.handleKeyDown.bind(this);
     this.context.loop.subscribe(this.update);
     this.board = generateGameBoard(this.boardDimensions);
-    document.addEventListener('keydown', this.handleKeyDown.bind(this));
+    document.addEventListener('keydown', this.keydownFunc);
   }
 
   componentWillUnmount() {
     this.context.loop.unsubscribe(this.update);
+    document.removeEventListener('keydown', this.keydownFunc);
   }
 
   /*****************************
@@ -484,15 +486,18 @@ class Game extends Component {
 
     return (
       <div className={ `game cf ${this.levelThemes[this.level]} style--${options.style}` }>
-        <div className="sidebar">
+        <div className="header">
           <div className="timer">
-            Score: { this.state.currentScore } <br />
-            Time: { this.state.currentTime }
+            <span style={ { margin: '10px 20px' } }>Score: { this.state.currentScore }</span>
+            <span style={ { margin: '10px 20px' } }>Time: { this.state.currentTime }</span>
           </div>
         </div>
 
-        <div>Completed Rows { this.completedLines }  Level { this.level + 1 }</div>
         <div className="main">
+          <div className="status">
+            <span>Rows { this.completedLines }</span>
+            <span>Level { this.level + 1 }</span>
+          </div>
           { board }
 
           { this.flash ?
@@ -513,6 +518,10 @@ class Game extends Component {
           <LoserScreen
             score={ this.state.currentScore }
             onRestart={ this.restartGame.bind(this) }
+            onMainMenu={ () => {
+              this.restartGame();
+              this.props.goToMainMenu(this);
+            } }
           />
         }
 
@@ -536,6 +545,10 @@ class Game extends Component {
 
 Game.contextTypes = {
   loop: object
+};
+
+Game.propTypes = {
+  goToMainMenu: func
 };
 
 export default Game;

@@ -16,7 +16,7 @@ class LoserScreen extends Component {
   }
 
   render () {
-    const { score } = this.props;
+    const { score, onRestart, onMainMenu } = this.props;
     const { scoreSubmitted, userTimestamp } = this.state;
 
     return (
@@ -27,12 +27,12 @@ class LoserScreen extends Component {
         { scoreSubmitted
           ? <div>
             <HighScoreList userTimestamp={ userTimestamp } />
-            <span className="btn" onClick={ this.props.onRestart } style={ { margin: '0 20px' } }>Play again</span>
-            <span className="btn" style={ { margin: '0 20px' } }>Main menu</span>
+            <span className="btn" onClick={ onRestart } style={ { margin: '0 20px' } }>Play again</span>
+            <span className="btn" onClick={ onMainMenu } style={ { margin: '0 20px' } }>Main menu</span>
           </div>
           : <HighScoreForm
             score={ score }
-            callback={ (response) => this.setState({ scoreSubmitted: true, userTimestamp: response[0].date }) }
+            callback={ (response) => this.setState({ scoreSubmitted: true, userTimestamp: response && response[0].date }) }
           />
         }
       </div>
@@ -41,6 +41,7 @@ class LoserScreen extends Component {
 }
 
 LoserScreen.propTypes = {
+  onMainMenu: func,
   onRestart: func,
   score: number
 };
