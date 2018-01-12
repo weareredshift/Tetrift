@@ -30,19 +30,19 @@ class App extends Component {
 
     return (
       <div className="app">
-        <Loop>
-          { startGame
-            ? <Game
+        { startGame
+          ? <Loop>
+            <Game
               options={ options }
               goToMainMenu={ () => this.setState({ startGame: false }) }
             />
-            : <Splash
-              activeOptions={ options }
-              setOption={ (option) => this.setOption(option) }
-              onGameStart={ () => this.setState({ startGame: true }) }
-            />
-          }
-        </Loop>
+          </Loop>
+          : <Splash
+            activeOptions={ options }
+            setOption={ (option) => this.setOption(option) }
+            onGameStart={ () => this.setState({ startGame: true }) }
+          />
+        }
       </div>
     );
   }
