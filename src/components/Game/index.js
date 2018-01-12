@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { object } from 'prop-types';
+import { object, func } from 'prop-types';
 import WinnerScreen from '../WinnerScreen';
 import LoserScreen from '../LoserScreen';
 
@@ -95,13 +95,15 @@ class Game extends Component {
   }
 
   componentDidMount() {
+    this.keydownFunc = this.handleKeyDown.bind(this);
     this.context.loop.subscribe(this.update);
     this.board = generateGameBoard(this.boardDimensions);
-    document.addEventListener('keydown', this.handleKeyDown.bind(this));
+    document.addEventListener('keydown', this.keydownFunc);
   }
 
   componentWillUnmount() {
     this.context.loop.unsubscribe(this.update);
+    document.removeEventListener('keydown', this.keydownFunc);
   }
 
   /*****************************
@@ -516,7 +518,10 @@ class Game extends Component {
           <LoserScreen
             score={ this.state.currentScore }
             onRestart={ this.restartGame.bind(this) }
-            onMainMenu={ this.props.goToMainMenu.bind(this) }
+            onMainMenu={ () => {
+              this.restartGame();
+              this.props.goToMainMenu(this);
+            } }
           />
         }
 
@@ -540,6 +545,10 @@ class Game extends Component {
 
 Game.contextTypes = {
   loop: object
+};
+
+Game.propTypes = {
+  goToMainMenu: func
 };
 
 export default Game;
