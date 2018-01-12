@@ -31,12 +31,15 @@ class HighScoreForm extends React.Component {
   }
 
   render() {
+    const { callback } = this.props;
     return (
       <form onSubmit={ this.handleSubmit }>
         <input placeholder="Enter your name" type="text" value={ this.state.name } onChange={ this.handleChange } />
         <button className="btn" type="submit">
-          Submit
+          Submit score
         </button>
+
+        <span className="btn btn--secondary" onClick={ () => callback(undefined) }>Skip to leaderboard</span>
       </form>
     );
   }

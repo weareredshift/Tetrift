@@ -22,6 +22,18 @@
   border: 3px solid white;
 }
 
+.btn.btn--secondary {
+  border: 0;
+  color: white;
+  background: transparent;
+  margin-top: 20px;
+  font-size: 13px;
+}
+
+.btn.btn--secondary:hover {
+  color: #999;
+}
+
 .btn:hover {
   background: transparent;
   color: white;

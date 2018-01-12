@@ -32,7 +32,7 @@ class LoserScreen extends Component {
           </div>
           : <HighScoreForm
             score={ score }
-            callback={ (response) => this.setState({ scoreSubmitted: true, userTimestamp: response[0].date }) }
+            callback={ (response) => this.setState({ scoreSubmitted: true, userTimestamp: response && response[0].date }) }
           />
         }
       </div>
