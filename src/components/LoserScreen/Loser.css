@@ -12,4 +12,6 @@
   flex-direction: column;
 }
 
-.loser button { color: white; }
+.loser .title {
+  margin-bottom: 1.5rem;
+}

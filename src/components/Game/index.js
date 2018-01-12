@@ -509,14 +509,17 @@ class Game extends Component {
           </div>
         </div>
 
-        { this.state.showLoseScreen ?
-          <LoserScreen score={ this.state.currentScore } onRestart={ this.restartGame.bind(this) } />
-          : null
+        { this.state.showLoseScreen &&
+          <LoserScreen
+            score={ this.state.currentScore }
+            onRestart={ this.restartGame.bind(this) }
+          />
         }
 
-        { this.state.showWinScreen ?
-          <WinnerScreen onRestart={ this.restartGame.bind(this) } />
-          : null
+        { this.state.showWinScreen &&
+          <WinnerScreen
+            onRestart={ this.restartGame.bind(this) }
+          />
         }
 
         { options.sound === 'yes' &&
