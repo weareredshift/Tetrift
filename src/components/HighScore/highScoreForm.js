@@ -22,9 +22,12 @@ class HighScoreForm extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const { name } = this.state;
-    const { score, callback, submitForm } = this.props;
-    saveHighScore('tetrift', name, score)
-      .then(response => callback(response));
+
+    if (name.length > 0) {
+      const { score, callback } = this.props;
+      saveHighScore('tetrift', name, score)
+        .then(response => callback(response));
+    }
   }
 
   render() {
