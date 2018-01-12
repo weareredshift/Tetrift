@@ -516,6 +516,7 @@ class Game extends Component {
           <LoserScreen
             score={ this.state.currentScore }
             onRestart={ this.restartGame.bind(this) }
+            onMainMenu={ this.props.goToMainMenu.bind(this) }
           />
         }
 

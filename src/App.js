@@ -30,10 +30,12 @@ class App extends Component {
 
     return (
       <div className="app">
-        
         <Loop>
           { startGame
-            ? <Game options={ options } />
+            ? <Game
+              options={ options }
+              goToMainMenu={ () => this.setState({ startGame: false }) }
+            />
             : <Splash
               activeOptions={ options }
               setOption={ (option) => this.setOption(option) }
