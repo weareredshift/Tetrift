@@ -344,7 +344,7 @@ class Game extends Component {
   renderGameBoard (board, piece, piecePos) {
     const pieceCoordinates = piece ? this.calculatePieceCoordinates(piece, piecePos) : {};
     const { x, y } = this.boardDimensions;
-    const height = window.innerHeight / (y + 2);
+    const height = window.innerHeight / (y + 4);
 
     const squares = board.map((row, rowIdx) => row.map((square, index) => {
       let fillClass = 'empty';
