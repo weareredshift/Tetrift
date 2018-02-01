@@ -59,7 +59,7 @@ export class Splash extends Component {
         >Start game</span>
 
         <footer className="footer">
-          Crafted by <a href="http://www.redshiftdigital.com/" target="_blank">Redshift Digital, inc.</a>
+          Crafted by <a href="http://www.redshiftdigital.com/" target="_blank" rel="noopener noreferrer">Redshift Digital, inc.</a>
         </footer>
       </div>
     );

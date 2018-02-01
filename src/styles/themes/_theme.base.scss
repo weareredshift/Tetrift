@@ -1,0 +1,46 @@
+body,
+a {
+  color: $black;
+}
+
+body {
+  background-color: $lightgrey;
+}
+
+.typ--link {
+  text-transform: uppercase;
+  position: relative;
+  cursor: pointer;
+
+  &:hover:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0.1rem;
+    background-color: $reverered;
+  }
+}
+
+.typ--revereblue { color: $revereblue; }
+.typ--reverered { color: $reverered; }
+.typ--highlightblue { color: $highlightblue; }
+.typ--green { color: $green; }
+.typ--lightblue { color: $lightblue; }
+.typ--mediumblue { color: $mediumblue; }
+.typ--darkblue { color: $darkblue; }
+.typ--lightgrey { color: $lightgrey; }
+.typ--grey { color: $grey; }
+.typ--black { color: $black; }
+
+.bg--revereblue { background-color: $revereblue; }
+.bg--reverered { background-color: $reverered; }
+.bg--highlightblue { background-color: $highlightblue; }
+.bg--green { background-color: $green; }
+.bg--lightblue { background-color: $lightblue; }
+.bg--mediumblue { background-color: $mediumblue; }
+.bg--darkblue { background-color: $darkblue; }
+.bg--lightgrey { background-color: $lightgrey; }
+.bg--grey { background-color: $grey; }
+.bg--black { background-color: $black; }
