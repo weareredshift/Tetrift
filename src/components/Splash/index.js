@@ -5,7 +5,7 @@ import './Splash.css';
 export class Splash extends Component {
   render () {
     const { onGameStart, setOption, activeOptions } = this.props;
-    const styles = ['classic', 'modern', 'redshift'];
+    const styles = ['redshift', 'classic', 'modern'];
     const difficulties = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const soundOptions = ['yes', 'no'];
 
@@ -27,7 +27,7 @@ export class Splash extends Component {
             )) }
           </ul>
 
-          <h3 className="header">Select difficulty</h3>
+          <h3 className="header">Select level</h3>
           <ul className="options">
             { difficulties.map((difficulty, index) => (
               <li
