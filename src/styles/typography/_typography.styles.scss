@@ -9,33 +9,8 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
-// font sizes
-body,
-.typ--default {
-  @include font-size(body);
-}
-
-h1,
-.typ--h1 {
-  @include font-size(h1);
-}
-
-h2,
-.typ--h2 {
-  @include font-size(h2);
-}
-
-h3,
-.typ--h3 {
-  @include font-size(h3);
-}
-
-h4,
-.typ--h4 {
-  @include font-size(h4);
-}
-
-
+h1 { font-size: 80px; }
+h2 { font-size: 40px; }
 
 .typ--caps { text-transform: uppercase; }
 
@@ -53,7 +28,7 @@ h4,
 // font modifiers
 a {
   text-decoration: none;
-  color: #FF2953;
+  color: $redshift;
 }
 
 a:hover {
@@ -61,7 +36,7 @@ a:hover {
 }
 
 em {
-  color: #FF2953;
+  color: $redshift;
 }
 
 // basic element styles
