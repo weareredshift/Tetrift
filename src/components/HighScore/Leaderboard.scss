@@ -1,3 +1,5 @@
+@import '../../styles/sass-includes';
+
 .leaderboard {
   width: 100%;
 }
@@ -22,13 +24,13 @@
 }
 
 .leaderboard li.is-user {
-  color: #0DA6F3;
+  color: $blue;
   animation: blink 0.7s steps(2, start) infinite;
 }
 
 .leaderboard .title {
   margin-bottom: 2rem;
-  color: #FF2953;
+  color: $redshift;
 }
 
 .leaderboard .placement {

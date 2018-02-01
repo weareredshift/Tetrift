@@ -14,7 +14,6 @@ import {
 } from './gameUtils';
 
 import './Game.css';
-import './themes.css';
 import {
   line,
   square,
