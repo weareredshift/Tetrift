@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import './reset.css';
+import '../styles/core.css';
 import './App.css';
 
-import Loop from './components/Loop';
-import Game from './components/Game';
-import Splash from './components/Splash';
+import Loop from '../components/Loop';
+import Game from '../components/Game';
+import Splash from '../components/Splash';
 
 class App extends Component {
   constructor (props) {
