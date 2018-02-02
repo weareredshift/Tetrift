@@ -52,11 +52,12 @@ export class Splash extends Component {
               </li>
             )) }
           </ul>
+
+          <span
+            className="btn"
+            onClick={ () => onGameStart instanceof Function && onGameStart() }
+          >Start game</span>
         </div>
-        <span
-          className="btn"
-          onClick={ () => onGameStart instanceof Function && onGameStart() }
-        >Start game</span>
 
         <footer className="footer">
           Crafted by <a href="http://www.redshiftdigital.com/" target="_blank" rel="noopener noreferrer">Redshift Digital, inc.</a>
