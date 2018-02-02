@@ -488,7 +488,6 @@ class Game extends Component {
         <div className="header">
           <div className="timer">
             <span style={ { margin: '10px 20px' } }>Score: { this.state.currentScore }</span>
-            <span style={ { margin: '10px 20px' } }>Time: { this.state.currentTime }</span>
           </div>
         </div>
 

@@ -3,3 +3,29 @@ button {
   text-transform: uppercase;
   float: none;
 }
+
+.btn {
+  background: white;
+  padding: 0.938em 1.563em;
+  color: $black;
+  cursor: pointer;
+  border: 3px solid $white;
+  display: inline-block;
+}
+
+.btn.btn--secondary {
+  border: 0;
+  color: $white;
+  background: transparent;
+  margin-top: 2.5em;
+  font-size: 0.8125em;
+}
+
+.btn.btn--secondary:hover {
+  color: $lightgrey;
+}
+
+.btn:hover {
+  background: transparent;
+  color: white;
+}

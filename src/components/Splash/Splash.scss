@@ -14,31 +14,10 @@
 
 .splash > div {
   margin-bottom: 3rem;
-}
-
-.btn {
-  background: white;
-  padding: 15px 25px;
-  color: $black;
-  cursor: pointer;
-  border: 3px solid $white;
-}
-
-.btn.btn--secondary {
-  border: 0;
-  color: $white;
-  background: transparent;
-  margin-top: 40px;
-  font-size: 13px;
-}
-
-.btn.btn--secondary:hover {
-  color: $lightgrey;
-}
-
-.btn:hover {
-  background: transparent;
-  color: white;
+  // media queries
+  @include breakpoint($mobile-lg) {
+    margin-bottom: 6rem;
+  }
 }
 
 .title {
@@ -57,7 +36,7 @@
   display: inline-block;
   margin: 0 1rem;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 0.75em;
 }
 
 .options li:hover {
@@ -71,4 +50,9 @@
 .footer {
   position: absolute;
   bottom: 3rem;
+  // media queries
+  @include breakpoint($mobile-lg) {
+    font-size: 11px;
+    bottom: 8rem;
+  }
 }

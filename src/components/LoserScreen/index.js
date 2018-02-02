@@ -25,10 +25,10 @@ class LoserScreen extends Component {
         <p style={ { marginBottom: '4rem' } }>Your score was <em>{ score }</em></p>
 
         { scoreSubmitted
-          ? <div>
+          ? <div className="leaderboard__footer">
             <HighScoreList userTimestamp={ userTimestamp } />
-            <span className="btn" onClick={ onRestart } style={ { margin: '0 20px' } }>Play again</span>
-            <span className="btn" onClick={ onMainMenu } style={ { margin: '0 20px' } }>Main menu</span>
+            <span className="btn" onClick={ onRestart }>Play again</span>
+            <span className="btn" onClick={ onMainMenu }>Main menu</span>
           </div>
           : <HighScoreForm
             score={ score }

@@ -82,6 +82,10 @@
   position: relative;
   display: flex;
   align-items: flex-start;
+  // media queries
+  @include breakpoint($mobile-lg) {
+    flex-direction: column;
+  }
 }
 
 .queue {
@@ -93,6 +97,10 @@
   color: white;
   text-transform: uppercase;
   font-size: 13px;
+  // media queries
+  @include breakpoint($mobile-lg) {
+    display: none;
+  }
 
   h5 {
     margin-bottom: 10px;
@@ -104,15 +112,31 @@
   flex-direction: column;
   padding-right: 40px;
   text-align: right;
+  // media queries
+  @include breakpoint($mobile-lg) {
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    padding-right: 0;
+    width: 100%;
+    display: block;
+  }
 }
 
 .status > span {
   margin-bottom: 10px;
   display: block;
+  // media queries
+  @include breakpoint($mobile-lg) {
+    display: inline-block;
+    margin: 0 20px 10px;
+  }
 }
 
 .audio {
   position: fixed;
   top: 0;
   right: 0;
+  opacity: 0;
+  pointer-events: none;
 }
