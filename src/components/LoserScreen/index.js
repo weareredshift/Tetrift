@@ -21,8 +21,8 @@ class LoserScreen extends Component {
 
     return (
       <div className="loser">
-        <h2 className="title">You Lose!</h2>
-        <p style={ { marginBottom: '6rem' } }>Your score was <em>{ score }</em></p>
+        <h2 className="title">Nice work, buddy</h2>
+        <p style={ { marginBottom: '4rem' } }>Your score was <em>{ score }</em></p>
 
         { scoreSubmitted
           ? <div>

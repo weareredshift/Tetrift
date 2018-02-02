@@ -8,6 +8,8 @@
   width: 100%;
   max-width: 380px;
   margin: 0 auto 6rem;
+  max-height: calc(100vh - 339px);
+  overflow: auto;
 }
 
 .leaderboard li {
@@ -26,6 +28,10 @@
 .leaderboard li.is-user {
   color: $blue;
   animation: blink 0.7s steps(2, start) infinite;
+
+  &.not-top-ten {
+    margin-top: 3rem;
+  }
 }
 
 .leaderboard .title {
