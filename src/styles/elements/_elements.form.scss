@@ -1,0 +1,17 @@
+input[type='text'] {
+  padding: 16px 20px;
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+input[type='text']:focus {
+  border-color: #FF2953;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}

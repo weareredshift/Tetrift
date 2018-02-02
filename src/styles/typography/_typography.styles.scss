@@ -1,44 +1,21 @@
 // default font scaling
 html {
   @include font(regular);
+  font-family: '8bit_wonder', sans-serif;
   font-size: 10px;
+  text-align: center;
+  text-transform: uppercase;
   line-height: 1;
   -webkit-font-smoothing: antialiased;
 }
 
-// font sizes
 body,
-.typ--default {
-  @include font-size(body);
+.typ--default {    
+  @include font-size(body);    
 }
 
-h1,
-.typ--h1 {
-  @include font-size(h1);
-}
-
-h2,
-.typ--h2 {
-  @include font-size(h2);
-}
-
-h3,
-.typ--h3 {
-  @include font-size(h3);
-}
-
-h4,
-.typ--h4 {
-  @include font-size(h4);
-}
-
-.typ--body { @include font-size(body); }
-.typ--vsmall { @include font-size(vsmall); }
-
-.typ--label,
-.typ--small {
-  @include font-size(small);
-}
+h1 { font-size: 80px; }
+h2 { font-size: 40px; }
 
 .typ--caps { text-transform: uppercase; }
 
@@ -53,14 +30,19 @@ h4,
   white-space: nowrap;
 }
 
-// font weights
-.typ--light { @include font(light); }
-.typ--regular { @include font(regular); }
-.typ--medium { @include font(medium); }
-.typ--semibold { @include font(semibold); }
-.typ--bold { @include font(bold); }
-
 // font modifiers
+a {
+  text-decoration: none;
+  color: $redshift;
+}
+
+a:hover {
+  color: #888;
+}
+
+em {
+  color: $redshift;
+}
 
 // basic element styles
 strong { @include font(semibold); }
@@ -86,11 +68,6 @@ blockquote {
 // Text decoration styles
 .typ--underline { text-decoration: underline; }
 .typ--actionable { cursor: pointer; }
-
-em,
-.typ--italic {
-  font-style: italic;
-}
 
 .typ--truncate {
   width: 100%;

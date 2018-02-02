@@ -1,8 +1,10 @@
+@import '../../styles/sass-includes';
+
 .splash {
   width: 100vw;
   height: 100vh;
-  background: black;
-  color: white;
+  background: $black;
+  color: $white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,30 +19,27 @@
 .btn {
   background: white;
   padding: 15px 25px;
-  color: black;
+  color: $black;
   cursor: pointer;
-  border: 3px solid white;
+  border: 3px solid $white;
 }
 
 .btn.btn--secondary {
   border: 0;
-  color: white;
+  color: $white;
   background: transparent;
   margin-top: 40px;
   font-size: 13px;
 }
 
 .btn.btn--secondary:hover {
-  color: #999;
+  color: $lightgrey;
 }
 
 .btn:hover {
   background: transparent;
   color: white;
 }
-
-h1 { font-size: 80px; }
-h2 { font-size: 40px; }
 
 .title {
   margin-bottom: 5rem;
@@ -62,11 +61,11 @@ h2 { font-size: 40px; }
 }
 
 .options li:hover {
-  color: #aaa;
+  color: $darkestgrey;
 }
 
 .options li.selected {
-  color: #FF2953;
+  color: $redshift;
 }
 
 .footer {
