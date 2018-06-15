@@ -5,7 +5,7 @@ import './Splash.css';
 export class Splash extends Component {
   render () {
     const { onGameStart, setOption, activeOptions } = this.props;
-    const styles = ['redshift', 'classic', 'modern'];
+    const styles = ['classic', 'modern', 'round'];
     const difficulties = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const soundOptions = ['yes', 'no'];
 
