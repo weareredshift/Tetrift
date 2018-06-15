@@ -38,7 +38,7 @@ class HighScoreForm extends React.Component {
     const { error } = this.state;
 
     return (
-      <form onSubmit={ this.handleSubmit }>
+      <form style={ { maxWidth: '40rem' } } onSubmit={ this.handleSubmit }>
         <input placeholder="Enter your name" type="text" value={ this.state.name } onChange={ this.handleChange } />
 
         <div className="submit__wrapper">

@@ -13,7 +13,7 @@ class App extends Component {
     this.state = {
       startGame: false,
       options: {
-        style: 'redshift',
+        style: 'classic',
         difficulty: 0,
         sound: 'yes'
       }
